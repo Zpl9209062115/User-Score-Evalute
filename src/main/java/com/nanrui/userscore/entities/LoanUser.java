@@ -1,4 +1,4 @@
-package com.atguigu.userscore.entities;
+package com.nanrui.userscore.entities;
 
 import javax.persistence.*;
 

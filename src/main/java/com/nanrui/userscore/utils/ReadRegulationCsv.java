@@ -1,4 +1,4 @@
-package com.atguigu.userscore.utils;
+package com.nanrui.userscore.utils;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;

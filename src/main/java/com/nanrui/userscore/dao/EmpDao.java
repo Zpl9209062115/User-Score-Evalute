@@ -1,6 +1,6 @@
-package com.atguigu.userscore.dao;
+package com.nanrui.userscore.dao;
 
-import com.atguigu.userscore.entities.LoanUser;
+import com.nanrui.userscore.entities.LoanUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

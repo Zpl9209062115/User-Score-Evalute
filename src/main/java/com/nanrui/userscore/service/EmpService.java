@@ -1,10 +1,10 @@
-package com.atguigu.userscore.service;
+package com.nanrui.userscore.service;
 
-import com.atguigu.userscore.dao.EmpDao;
-import com.atguigu.userscore.entities.LoanUser;
-import com.atguigu.userscore.utils.GenerativeRuleUtils;
-import com.atguigu.userscore.utils.IntervalUtil;
-import com.atguigu.userscore.utils.ReadRegulationCsv;
+import com.nanrui.userscore.dao.EmpDao;
+import com.nanrui.userscore.entities.LoanUser;
+import com.nanrui.userscore.utils.GenerativeRuleUtils;
+import com.nanrui.userscore.utils.IntervalUtil;
+import com.nanrui.userscore.utils.ReadRegulationCsv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

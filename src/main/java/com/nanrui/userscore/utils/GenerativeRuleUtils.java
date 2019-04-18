@@ -1,4 +1,4 @@
-package com.atguigu.userscore.utils;
+package com.nanrui.userscore.utils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.atguigu.userscore.controller;
+package com.nanrui.userscore.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;

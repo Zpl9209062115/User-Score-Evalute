@@ -1,4 +1,4 @@
-package com.atguigu.userscore.component;
+package com.nanrui.userscore.component;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

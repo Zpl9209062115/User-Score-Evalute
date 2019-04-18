@@ -1,4 +1,4 @@
-package com.atguigu.userscore.cache;
+package com.nanrui.userscore.cache;
 
 import org.springframework.cache.annotation.CachePut;
 

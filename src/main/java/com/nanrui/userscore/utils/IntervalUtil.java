@@ -1,4 +1,4 @@
-package com.atguigu.userscore.utils;
+package com.nanrui.userscore.utils;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

@@ -1,7 +1,7 @@
-package com.atguigu.userscore.controller;
+package com.nanrui.userscore.controller;
 
-import com.atguigu.userscore.entities.LoanUser;
-import com.atguigu.userscore.service.EmpService;
+import com.nanrui.userscore.entities.LoanUser;
+import com.nanrui.userscore.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

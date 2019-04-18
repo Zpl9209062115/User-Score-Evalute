@@ -1,6 +1,6 @@
-package com.atguigu.userscore.config;
+package com.nanrui.userscore.config;
 
-import com.atguigu.userscore.component.LoginHandleInterceptor;
+import com.nanrui.userscore.component.LoginHandleInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
