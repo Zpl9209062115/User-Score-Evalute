@@ -92,7 +92,7 @@ public class ReadRegulationCsv {
      * @param dataList:数据集
      * @param filePath:全路径名
      */
-    /*public static boolean createCSV(List<String[]> dataList, String filePath) throws Exception {
+    public static boolean createCSV(List<String[]> dataList, String filePath) throws Exception {
         boolean isSuccess = false;
         CsvWriter writer = null;
         FileOutputStream out = null;
@@ -120,6 +120,6 @@ public class ReadRegulationCsv {
         }
 
         return isSuccess;
-    }*/
+    }
 
 }
