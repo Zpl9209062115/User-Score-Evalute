@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>Dashboard Template for Bootstrap</title>
+		<!-- Bootstrap core CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+		<style type="text/css">
+			/* Chart.js */
+			
+			@-webkit-keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			@keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			.chartjs-render-monitor {
+				-webkit-animation: chartjs-render-animation 0.001s;
+				animation: chartjs-render-animation 0.001s;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--引入抽取的topbar-->
+		<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+		<div th:replace="commons/bar::topbar"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!--引入侧边栏-->
+				<div th:replace="commons/bar::#sidebar(activeUri='empRatings')"></div>
+
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+
+					<!--<h2><a class="btn btn-sm btn-success" href="emp" th:href="@{/emp}" th:border="">员工添加</a></h2>-->
+					<button class="btn btn-sm btn-success" th:style="button" href="#">批量预测</button>
+
+					<form th:action="@{/emps/getPredictionMessage}" method="post">
+
+						<div class="form-group">
+							<label for="exampleFormControlInput1_Name">贷款人姓名</label>
+							<input type="email" th:name="loanUser_name" class="form-control" id="exampleFormControlInput1_Name" placeholder="name@example.com">
+						</div>
+
+						<div class="form-group">
+							<label for="exampleFormControlInput1_Age">贷款人年龄</label>
+							<input type="email" th:name="age" class="form-control" id="exampleFormControlInput1_Age" placeholder="name@example.com">
+						</div>
+
+						<div class="form-group">
+							<label for="exampleFormControlInput1_Income">贷款人收入</label>
+							<input type="email" th:name="loanUser_income" class="form-control" id="exampleFormControlInput1_Income" placeholder="name@example.com">
+						</div>
+
+						<div class="form-group">
+							<label for="exampleFormControlInput1_ChildNum">贷款人孩子数量</label>
+							<input type="email" th:name="loanUser_childNum" class="form-control" id="exampleFormControlInput1_ChildNum" placeholder="name@example.com">
+						</div>
+
+						<div class="form-group">
+							<label for="exampleFormControlInput1_WorkTime">贷款人工作时间</label>
+							<input type="email" th:name="loanUser_workTime" class="form-control" id="exampleFormControlInput1_WorkTime" placeholder="name@example.com">
+						</div>
+
+						<div class="form-group">
+							<label for="exampleFormControlInput1_LiveLife">贷款人居住年限</label>
+							<input type="email" th:name="loanUser_liveLife" class="form-control" id="exampleFormControlInput1_LiveLife" placeholder="name@example.com">
+						</div>
+
+						<button type="submit" class="btn btn-primary">预测</button>
+
+					</form>
+
+				</main>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
+		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>
+		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+
+	</body>
+
+</html>
