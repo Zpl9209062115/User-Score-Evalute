@@ -3,6 +3,7 @@ package com.nanrui.userscore.dao;
 import com.nanrui.userscore.entities.LoanUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+
 /**
  * @ClassName empDao
  * @Description TODO
@@ -12,5 +13,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 //继承JpaRepository来完成对数据库的操作
 public interface EmpDao extends JpaRepository<LoanUser,Integer> {
-
 }

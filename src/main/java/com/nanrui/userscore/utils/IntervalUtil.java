@@ -129,8 +129,8 @@ public class IntervalUtil {
         list.add("[0,15)");
         list.add("[15,30)");
         list.add("[30,45)");
-        list.add("[45,60)");
-        list.add("[60,75)");
+        list.add("[45,60)");/*
+        list.add("[60,Inf)");*/
 
         for (int i = 0; i<list.size();i++){
             System.out.println(a.isInTheInterval("0.436589", list.get(i)));

@@ -4,6 +4,10 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+#    schema:
+#      - classpath:sql/department.sql
+#      - classpath:sql/employee.sql
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,6 +20,5 @@ server:
   context-path: /userscore
   tomcat:
     uri-encoding: UTF-8
-
 
 

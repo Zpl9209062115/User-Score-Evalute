@@ -1,6 +1,7 @@
 package com.nanrui.userscore.controller;
 
 import com.nanrui.userscore.entities.LoanUser;
+import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,15 +28,15 @@ public class EmpController {
      * 查询所有用户，返回列表页面
      * @return
      */
-    @GetMapping("/emps/getAllEmp")
+    /*@GetMapping("/emps/getAllEmp")
     public String getEmpMessage(Model model){
-        List<LoanUser> allLoanUser = empService.getAllLoanUser();
-        /**
+        List<RuleBean> allLoanUser = empService.getAllLoanUser();
+        *//**
          * 放到请求域中
-         */
+         *//*
         model.addAttribute("emps",allLoanUser);
         return "emp/list";
-    }
+    }*/
 
     /**
      * 来到用户预测页面
