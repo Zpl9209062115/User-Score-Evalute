@@ -3,6 +3,7 @@ package com.nanrui.userscore.entities;
 import javax.persistence.*;
 
 /**
+ * 评分比较规则宽表
  * @ClassName Rule
  * @Description TODO
  * @Author ZPL
@@ -24,6 +25,11 @@ public class RuleBean {
      * 指标名称
      */
     private String variable;
+
+    /**
+     * 指标名称
+     */
+    private String variable_secondLabel;
 
     /**
      * 指标判定规则
@@ -51,14 +57,9 @@ public class RuleBean {
     public RuleBean() {
     }
 
-    public RuleBean(String variable, String bin, String points) {
+    public RuleBean(String variable, String variable_secondLabel, String bin, String points, String unit) {
         this.variable = variable;
-        this.bin = bin;
-        this.points = points;
-    }
-
-    public RuleBean(String variable, String bin, String points, String unit) {
-        this.variable = variable;
+        this.variable_secondLabel = variable_secondLabel;
         this.bin = bin;
         this.points = points;
         this.unit = unit;
@@ -94,5 +95,13 @@ public class RuleBean {
 
     public void setPoints(String points) {
         this.points = points;
+    }
+
+    public String getVariable_secondLabel() {
+        return variable_secondLabel;
+    }
+
+    public void setVariable_secondLabel(String variable_secondLabel) {
+        this.variable_secondLabel = variable_secondLabel;
     }
 }

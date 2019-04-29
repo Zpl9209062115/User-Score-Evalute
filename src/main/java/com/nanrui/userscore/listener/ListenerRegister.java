@@ -15,6 +15,7 @@ public class ListenerRegister implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+
         System.out.println("监听web项目启动");
     }
 

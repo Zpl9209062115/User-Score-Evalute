@@ -21,6 +21,7 @@ import java.util.Map;
  * @Date 2019/4/18 15:40
  * @Version 1.0
  **/
+/*
 @Configuration
 public class DruidConfig {
 
@@ -64,3 +65,4 @@ public class DruidConfig {
     }
 
 }
+*/

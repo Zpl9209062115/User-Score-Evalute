@@ -1,6 +1,6 @@
 package com.nanrui.userscore.service;
 
-import com.nanrui.userscore.dao.EmpDao;
+import com.nanrui.userscore.dao.LoanUserDao;
 import com.nanrui.userscore.dao.RuleDao;
 import com.nanrui.userscore.entities.LoanUser;
 import com.nanrui.userscore.entities.RuleBean;
@@ -38,7 +38,7 @@ public class EmpService {
     List<RuleBean> ruleList = new ArrayList<>();
 
     @Autowired
-    EmpDao empDao;
+    LoanUserDao empDao;
 
     @Autowired
     RuleDao ruleDao;
@@ -113,7 +113,6 @@ public class EmpService {
                 ruleDao.deleteAll();
                 ruleDao.save(listAll);
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

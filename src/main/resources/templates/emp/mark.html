@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="commons/bar::#sidebar(activeUri='empRatings')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="py-5 text-center">
+                <img class="d-block mx-auto mb-4" th:src="@{/asserts/img/bootstrap-solid.svg}"
+                     src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="" width="72"
+                     height="72">
+                <h2>用户信用评分系统</h2>
+                <p class="lead">根据用户各个属性，进行筛选、预测和展现等功能。可以完成单个用户或多个用户的信用预测评分</p>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-8 order-md-1">
+                        <form class="needs-validation" th:action="@{/rule/giveMark}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="loanUser_name">姓名</label>
+                                    <input class="form-control" id="loanUser_name" placeholder="张XX"
+                                           th:name="loanUser_name"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="age">年龄</label>
+                                    <input class="form-control" id="age" placeholder="1-100" th:name="age" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="durationMonth">社保缴纳时间</label>
+                                <input class="form-control" id="durationMonth" placeholder="20" th:name="durationMonth"
+                                       required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="installmentIncome">分期付款率占可支配收入的百分比</label>
+                                <input class="form-control" id="installmentIncome" placeholder="3"
+                                       th:name="installmentIncome" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="creditAmount">欠款金额</label>
+                                <input class="form-control" id="creditAmount" placeholder="0" th:name="creditAmount"
+                                       required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label>用途</label>
+                                    <div style="width:100%;margin-left:auto;margin-right:auto;">
+                                        <select id="personalStatusAndSexSelect" name="purpose" class="form-control">
+                                            <option selected>[[---用途---]]</option>
+                                            <option th:each="rulePurpose : ${purpose}" th:name="purpose" required
+                                                    th:text="${rulePurpose}" th:value="${rulePurpose}"
+                                            >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>从业经历</label>
+                                    <div style="width:100%;margin-left:auto;margin-right:auto;">
+                                        <select id="personalStatusAndSexSelect" name="employmentSince"
+                                                class="form-control">
+                                            <option selected>[[---从业经历---]]</option>
+                                            <option th:each="rulePresentEmploymentSince : ${employmentSince}"
+                                                    th:name="employmentSince"
+                                                    th:text="${rulePresentEmploymentSince}"
+                                                    th:value="${rulePresentEmploymentSince}"
+                                                    required
+                                            >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>储蓄存款及债券</label>
+                                    <div style="width:100%;margin-left:auto;margin-right:auto;">
+                                        <select id="personalStatusAndSexSelect" name="savingsAccountAndBonds"
+                                                class="form-control">
+                                            <option selected>[[---储蓄存款及债券---]]</option>
+                                            <option th:each="ruleSavingsAccountAndBonds : ${savingsAccountAndBonds}"
+                                                    th:name="savingsAccountAndBonds"
+                                                    th:text="${ruleSavingsAccountAndBonds}"
+                                                    th:value="${ruleSavingsAccountAndBonds}"
+                                                    required
+                                            >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label>信用历史</label>
+                                    <div style="width:100%;margin-left:auto;margin-right:auto;">
+                                        <select id="personalStatusAndSexSelect" name="creditHistory"
+                                                class="form-control">
+                                            <option selected>[[---信用历史---]]</option>
+                                            <option th:each="ruleCreditHistory : ${creditHistory}"
+                                                    th:name="creditHistory"
+                                                    th:text="${ruleCreditHistory}" th:value="${ruleCreditHistory}"
+                                                    required
+                                            >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label>现有支票帐户的状况</label>
+                                    <div style="width:100%;margin-left:auto;margin-right:auto;">
+                                        <select id="personalStatusAndSexSelect" name="statusSxistingCheckingAccount"
+                                                class="form-control">
+                                            <option selected>[[---现有支票帐户的状况---]]</option>
+                                            <option th:each="ruleStatusOfExistingCheckingAccount : ${statusSxistingCheckingAccount}"
+                                                    th:name="statusSxistingCheckingAccount"
+                                                    th:text="${ruleStatusOfExistingCheckingAccount}"
+                                                    th:value="${ruleStatusOfExistingCheckingAccount}" required
+                                            >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label>其他债务人或保证人</label>
+                                    <div style="width:100%;margin-left:auto;margin-right:auto;">
+                                        <select id="personalStatusAndSexSelect" name="otherDebtorsOrGuarantors"
+                                                class="form-control">
+                                            <option selected>[[---其他债务人或保证人---]]</option>
+                                            <option th:each="ruleOtherDebtorsOrGuarantors : ${otherDebtorsOrGuarantors}"
+                                                    th:name="otherDebtorsOrGuarantors"
+                                                    th:text="${ruleOtherDebtorsOrGuarantors}"
+                                                    th:value="${ruleOtherDebtorsOrGuarantors}" required
+                                            >
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <hr class="mb-4">
+
+                            <h4 class="mb-3">住房情况</h4>
+                            <div class="custom-control custom-checkbox">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                       id="housingForFree"
+                                       th:value="'for free'" th:name="housing" required>
+                                <label class="form-check-label" for="housingForFree">for free</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="housingRent"
+                                       th:value="'rent'" th:name="housing" required>
+                                <label class="form-check-label" for="housingRent">rent</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="housingOwn"
+                                       th:value="'own'" th:name="housing" required>
+                                <label class="form-check-label" for="housingRent">own</label>
+                            </div>
+
+
+                            <h4 class="mb-3">其他分期付款计划</h4>
+                            <div class="custom-control custom-checkbox">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                       id="installmentPlansBank" th:name="installmentPlans" th:value="'bank'" required>
+                                <label class="form-check-label" for="installmentPlansBank">bank</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                       id="installmentPlansStores" th:name="installmentPlans" th:value="'stores'"
+                                       required>
+                                <label class="form-check-label" for="installmentPlansStores">stores</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                       id="installmentPlansNone" th:name="installmentPlans" th:value="'none'" required>
+                                <label class="form-check-label" for="installmentPlansNone">none</label>
+                            </div>
+                            <hr class="mb-4">
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" th:id="giveMark"
+                                    th:onclick="ajaxSubmit">Continue to checkout
+                            </button>
+                        </form>
+                        <br/>
+                        <form>
+                            <div class="btn btn-primary btn-lg custom-file">
+                                <input type="file" class="custom-file-input" id="customFileLangHTML">
+                                <label class="custom-file-label" for="customFileLangHTML" data-browse="批量预测">Voeg
+                                    je document toe</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="my-5 pt-5 text-muted text-center text-small" >
+        <p class="mb-1">&copy; 2017-2019 Company Name</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#">Privacy</a></li>
+            <li class="list-inline-item"><a href="#">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+    </footer>
+</div>
+</main>
+
+</div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js"
+        th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+
+</body>
+
+</html>

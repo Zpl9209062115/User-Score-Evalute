@@ -23,6 +23,7 @@ public class IntervalUtil {
      * @return true：表示data_value在区间interval范围内，false：表示data_value不在区间interval范围内
      */
     public boolean isInTheInterval(String data_value,String interval) {
+
         //将区间和data_value转化为可计算的表达式
         String formula = getFormulaByAllInterval(data_value,interval,"||");
         ScriptEngine jse = new ScriptEngineManager().getEngineByName("JavaScript");
@@ -129,8 +130,8 @@ public class IntervalUtil {
         list.add("[0,15)");
         list.add("[15,30)");
         list.add("[30,45)");
-        list.add("[45,60)");/*
-        list.add("[60,Inf)");*/
+        list.add("[45,60)");
+        list.add("(60,∞]");
 
         for (int i = 0; i<list.size();i++){
             System.out.println(a.isInTheInterval("0.436589", list.get(i)));

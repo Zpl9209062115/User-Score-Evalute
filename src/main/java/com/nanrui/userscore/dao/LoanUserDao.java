@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Version 1.0
  **/
 //继承JpaRepository来完成对数据库的操作
-public interface EmpDao extends JpaRepository<LoanUser,Integer> {
+public interface LoanUserDao extends JpaRepository<LoanUser,String> {
 }

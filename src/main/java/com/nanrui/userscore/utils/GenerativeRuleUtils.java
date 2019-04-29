@@ -2,7 +2,6 @@ package com.nanrui.userscore.utils;
 
 
 import com.nanrui.userscore.entities.RuleBean;
-import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ public class GenerativeRuleUtils {
     String variable = "";
     String bin = "";
     String points = "";
-    String unit = "";
     String variable_sex = "";
     int count = 0;
 
@@ -49,8 +47,14 @@ public class GenerativeRuleUtils {
     public List<RuleBean> colonMapDispose(Map<String,String> colonMap){
         for (Map.Entry<String,String> mapDispose : colonMap.entrySet()){
             String[] splitVariable = mapDispose.getKey().split("@");
-            variable = splitVariable[0];
+            variable = variableDispose(splitVariable[0]);
             bin = splitVariable[1];
+            /**
+             * 处理数据中的Inf,后面的工具类对于Inf不识别
+             */
+            if (bin.contains("Inf") || bin.contains("-Inf")){
+                bin = bin.replaceAll("Inf","∞");
+            }
             points = mapDispose.getValue();
             /**
              * 处理含':'的bin
@@ -73,8 +77,14 @@ public class GenerativeRuleUtils {
     public List<RuleBean> colonNotMapDispose(Map<String,String> colonMap){
         for (Map.Entry<String,String> mapDispose : colonMap.entrySet()){
             String[] splitVariable = mapDispose.getKey().split("@");
-            variable = splitVariable[0];
+            variable = variableDispose(splitVariable[0]);
             bin = splitVariable[1];
+            /**
+             * 处理数据中的Inf,后面的工具类对于Inf不识别
+             */
+            if (bin.contains("Inf") || bin.contains("-Inf")){
+                bin = bin.replaceAll("Inf","∞");
+            }
             points = mapDispose.getValue();
             /**
              * 处理不含':'的bin
@@ -93,40 +103,37 @@ public class GenerativeRuleUtils {
      *      处理特殊字符  %,%  /  ...
      */
     public List<RuleBean> specialCharBeanDispose(String variable,String splitColon,String variable_sex,String points){
-
         if (splitColon.contains("%,%") || splitColon.contains("/")){
             String[] splitColon_bin = splitColon.split("[%,%/]");
             for (int i = 0;i<splitColon_bin.length;i++){
                 if (!splitColon_bin[i].equals("")){
                     if (null == variable_sex){
-                        if (symbolDisposeBoolean(splitColon_bin[i]) && numDisposeBoolean(splitColon_bin[i])){
+                        if (symbolDisposeBoolean(splitColon_bin[i],null) && numDisposeBoolean(splitColon_bin[i])){
                             String bin = utils(splitColon_bin[i]);
                             String[] split = bin.split("->");
-                            bean = new RuleBean(variable,split[0],points,split[1]);
+                            bean = new RuleBean(variable.trim(),null,split[0].trim(),points.trim(),split[1].trim());
                         } else{
-                            bean = new RuleBean(variable,splitColon_bin[i],points);
+                            bean = new RuleBean(variable.trim(),null,splitColon_bin[i].trim(),points.trim(),null);
                         }
                     } else {
-                        if (symbolDisposeBoolean(splitColon_bin[i]) && numDisposeBoolean(splitColon_bin[i])){
+                        if (symbolDisposeBoolean(splitColon_bin[i],null) && numDisposeBoolean(splitColon_bin[i])){
                             String bin = utils(splitColon_bin[i]);
                             String[] split = bin.split("->");
-                            bean = new RuleBean(variable,split[0],points,split[1]);
+                            bean = new RuleBean(variable.trim(),null,split[0].trim(),points,split[1].trim());
                         } else{
-                            bean = new RuleBean(variable+"."+variable_sex,splitColon_bin[i],points);
+                            bean = new RuleBean(variable.trim(),variable_sex.trim(),splitColon_bin[i].trim(),points.trim(),null);
                         }
                     }
                     ruleBeanList.add(bean);
                 }
-
             }
-
         } else {
-            if (symbolDisposeBoolean(splitColon) && numDisposeBoolean(splitColon)){
+            if (symbolDisposeBoolean(splitColon,null) && numDisposeBoolean(splitColon)){
                 String bin = utils(splitColon);
                 String[] split = bin.split("->");
-                bean = new RuleBean(variable,split[0],points,split[1]);
+                bean = new RuleBean(variable.trim(),null,split[0].trim(),points,split[1].trim());
             } else {
-                bean = new RuleBean(variable,splitColon,points);
+                bean = new RuleBean(variable.trim(),null,splitColon.trim(),points.trim(),null);
             }
             ruleBeanList.add(bean);
         }
@@ -344,24 +351,89 @@ public class GenerativeRuleUtils {
             String halfSection = halfList.get(i).get(i + 1);
             if (null != halfSection){
                 if (halfSection.contains("(")){
-                    str = halfSection + "," + "Inf)";
+                    str = halfSection + "," + "∞)";
                 }
                 if (halfSection.contains("[")){
-                    str = halfSection + "," + "Inf)";
+                    str = halfSection + "," + "∞)";
                 }
                 if (halfSection.contains(")")){
-                    str = "[-Inf" + "," + halfSection;
+                    str = "[-∞" + "," + halfSection;
                 }
                 if (halfSection.contains("]")){
-                    str = "[-Inf" + "," + halfSection;
+                    str = "[-∞" + "," + halfSection;
                 }
             }
         }
         return str;
     }
 
-    public boolean symbolDisposeBoolean(String string){
-        boolean symbolBooleanResult = string.contains("<") || string.contains("<=") || string.contains(">") || string.contains(">=");
+    public String variableDispose(String variable){
+        String variableTrim = variable.trim();
+        String variableDisposeStr = "";
+        switch (variableTrim){
+            case "age.in.years" :
+                variableDisposeStr = "age";
+                break;
+            case "credit.history":
+                variableDisposeStr = "creditHistory";
+                break;
+            case "duration.in.month" :
+                variableDisposeStr = "durationMonth";
+                break;
+            case "present.employment.since" :
+                variableDisposeStr = "employmentSince";
+                break;
+            case "housing" :
+                variableDisposeStr = "housing";
+                break;
+            case "savings.account.and.bonds" :
+                variableDisposeStr = "savingsAccountAndBonds";
+                break;
+            case "other.installment.plans" :
+                variableDisposeStr = "installmentPlans";
+                break;
+            case "status.of.existing.checking.account" :
+                variableDisposeStr = "statusSxistingCheckingAccount";
+                break;
+            case "installment.rate.in.percentage.of.disposable.income" :
+                variableDisposeStr = "installmentIncome";
+                break;
+            case "credit.amount" :
+                variableDisposeStr = "creditAmount";
+                break;
+            case "purpose" :
+                variableDisposeStr = "purpose";
+                break;
+            case "other.debtors.or.guarantors" :
+                variableDisposeStr = "otherDebtorsOrGuarantors";
+                break;
+            case "personal.status.and.sex.female" :
+                variableDisposeStr = "sexFemale";
+                break;
+            case "personal.status.and.sex" :
+                variableDisposeStr = "sex";
+                break;
+            case "personal.status.and.sex.male" :
+                variableDisposeStr = "sexMale";
+                break;
+
+        }
+        return variableDisposeStr;
+    }
+
+    public boolean symbolDisposeBoolean(String string,List<String> normList){
+        boolean symbolBooleanResult = false;
+        if (normList == null){
+            symbolBooleanResult = string.contains("<") || string.contains("<=") || string.contains(">") || string.contains(">=");
+        }else {
+            for (int i = 0;i<normList.size();i++){
+                symbolBooleanResult = string.contains(normList.get(i));
+                if (symbolBooleanResult == true){
+                    break;
+                }
+            }
+        }
+
         return symbolBooleanResult;
     }
 

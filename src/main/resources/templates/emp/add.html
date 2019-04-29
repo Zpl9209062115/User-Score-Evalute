@@ -2,114 +2,350 @@
 <!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="">
-		<meta name="author" content="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-		<title>Dashboard Template for Bootstrap</title>
-		<!-- Bootstrap core CSS -->
-		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
 
-		<!-- Custom styles for this template -->
-		<link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
-		<style type="text/css">
-			/* Chart.js */
-			
-			@-webkit-keyframes chartjs-render-animation {
-				from {
-					opacity: 0.99
-				}
-				to {
-					opacity: 1
-				}
-			}
-			
-			@keyframes chartjs-render-animation {
-				from {
-					opacity: 0.99
-				}
-				to {
-					opacity: 1
-				}
-			}
-			
-			.chartjs-render-monitor {
-				-webkit-animation: chartjs-render-animation 0.001s;
-				animation: chartjs-render-animation 0.001s;
-			}
-		</style>
-	</head>
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
 
-	<body>
-		<!--引入抽取的topbar-->
-		<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
-		<div th:replace="commons/bar::topbar"></div>
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
 
-		<div class="container-fluid">
-			<div class="row">
-				<!--引入侧边栏-->
-				<div th:replace="commons/bar::#sidebar(activeUri='empRatings')"></div>
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
 
-				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="commons/bar::topbar"></div>
 
-					<!--<h2><a class="btn btn-sm btn-success" href="emp" th:href="@{/emp}" th:border="">员工添加</a></h2>-->
-					<button class="btn btn-sm btn-success" th:style="button" href="#">批量预测</button>
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="commons/bar::#sidebar(activeUri='empRatings')"></div>
 
-					<form th:action="@{/emps/getPredictionMessage}" method="post">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
-						<div class="form-group">
-							<label for="exampleFormControlInput1_Name">贷款人姓名</label>
-							<input type="email" th:name="loanUser_name" class="form-control" id="exampleFormControlInput1_Name" placeholder="name@example.com">
-						</div>
+            <!--<h2><a class="btn btn-sm btn-success" href="emp" th:href="@{/emp}" th:border="">员工添加</a></h2>-->
+            <form th:action="@{/rule/giveMark}" method="post">
 
-						<div class="form-group">
-							<label for="exampleFormControlInput1_Age">贷款人年龄</label>
-							<input type="email" th:name="age" class="form-control" id="exampleFormControlInput1_Age" placeholder="name@example.com">
-						</div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="loanUser_name">姓名</label>
+                        <input class="form-control" id="loanUser_name" placeholder="张XX" th:name="loanUser_name"
+                               required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="age">年龄</label>
+                        <input class="form-control" id="age" placeholder="1-100" th:name="age" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="durationMonth">社保缴纳时间</label>
+                        <input class="form-control" id="durationMonth" placeholder="20" th:name="durationMonth"
+                               required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="installmentIncome">分期付款率占可支配收入的百分比</label>
+                        <input class="form-control" id="installmentIncome" placeholder="3"
+                               th:name="installmentIncome" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="creditAmount">欠款金额</label>
+                        <input class="form-control" id="creditAmount" placeholder="0" th:name="creditAmount"
+                               required>
+                    </div>
+                </div>
 
-						<div class="form-group">
-							<label for="exampleFormControlInput1_Income">贷款人收入</label>
-							<input type="email" th:name="loanUser_income" class="form-control" id="exampleFormControlInput1_Income" placeholder="name@example.com">
-						</div>
+                <div>
+                    <label>住房情况</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="housingForFree"
+                               th:value="'for free'" th:name="housing" required>
+                        <label class="form-check-label">for free</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="housingRent"
+                               th:value="'rent'" th:name="housing" required>
+                        <label class="form-check-label">rent</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="housingOwn"
+                               th:value="'own'" th:name="housing" required>
+                        <label class="form-check-label">own</label>
+                    </div>
+                </div>
 
-						<div class="form-group">
-							<label for="exampleFormControlInput1_ChildNum">贷款人孩子数量</label>
-							<input type="email" th:name="loanUser_childNum" class="form-control" id="exampleFormControlInput1_ChildNum" placeholder="name@example.com">
-						</div>
+                <div>
+                    <label>其他分期付款计划</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                               id="installmentPlansBank" th:name="installmentPlans" th:value="'bank'" required>
+                        <label class="form-check-label" for="installmentPlansBank">bank</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                               id="installmentPlansStores" th:name="installmentPlans" th:value="'stores'" required>
+                        <label class="form-check-label" for="installmentPlansStores">stores</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                               id="installmentPlansNone" th:name="installmentPlans" th:value="'none'" required>
+                        <label class="form-check-label" for="installmentPlansNone">none</label>
+                    </div>
+                </div>
 
-						<div class="form-group">
-							<label for="exampleFormControlInput1_WorkTime">贷款人工作时间</label>
-							<input type="email" th:name="loanUser_workTime" class="form-control" id="exampleFormControlInput1_WorkTime" placeholder="name@example.com">
-						</div>
+                <div class="row">
+                    <div class="col-3 col-s3">
+                        <label>用途</label>
+                        <div style="width:100%;margin-left:auto;margin-right:auto;">
+                            <select id="personalStatusAndSexSelect" name="purpose" class="form-control">
+                                <option selected>[[---用途---]]</option>
+                                <option th:each="rulePurpose : ${purpose}" th:name="purpose" required
+                                        th:text="${rulePurpose}" th:value="${rulePurpose}"
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 col-s3">
+                        <label>从业经历</label>
+                        <div style="width:100%;margin-left:auto;margin-right:auto;">
+                            <select id="personalStatusAndSexSelect" name="employmentSince" class="form-control">
+                                <option selected>[[---从业经历---]]</option>
+                                <option th:each="rulePresentEmploymentSince : ${employmentSince}"
+                                        th:name="employmentSince"
+                                        th:text="${rulePresentEmploymentSince}" th:value="${rulePresentEmploymentSince}"
+                                        required
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 col-s3">
+                        <label>储蓄存款及债券</label>
+                        <div style="width:100%;margin-left:auto;margin-right:auto;">
+                            <select id="personalStatusAndSexSelect" name="savingsAccountAndBonds" class="form-control">
+                                <option selected>[[---储蓄存款及债券---]]</option>
+                                <option th:each="ruleSavingsAccountAndBonds : ${savingsAccountAndBonds}"
+                                        th:name="savingsAccountAndBonds"
+                                        th:text="${ruleSavingsAccountAndBonds}" th:value="${ruleSavingsAccountAndBonds}"
+                                        required
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 col-s3">
+                        <label>信用历史</label>
+                        <div style="width:100%;margin-left:auto;margin-right:auto;">
+                            <select id="personalStatusAndSexSelect" name="creditHistory" class="form-control">
+                                <option selected>[[---信用历史---]]</option>
+                                <option th:each="ruleCreditHistory : ${creditHistory}" th:name="creditHistory"
+                                        th:text="${ruleCreditHistory}" th:value="${ruleCreditHistory}" required
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-						<div class="form-group">
-							<label for="exampleFormControlInput1_LiveLife">贷款人居住年限</label>
-							<input type="email" th:name="loanUser_liveLife" class="form-control" id="exampleFormControlInput1_LiveLife" placeholder="name@example.com">
-						</div>
+                <div class="row">
+                    <div class="col-3 col-s3">
+                        <label>现有支票帐户的状况</label>
+                        <div style="width:100%;margin-left:auto;margin-right:auto;">
+                            <select id="personalStatusAndSexSelect" name="statusSxistingCheckingAccount"
+                                    class="form-control">
+                                <option selected>[[---现有支票帐户的状况---]]</option>
+                                <option th:each="ruleStatusOfExistingCheckingAccount : ${statusSxistingCheckingAccount}"
+                                        th:name="statusSxistingCheckingAccount"
+                                        th:text="${ruleStatusOfExistingCheckingAccount}"
+                                        th:value="${ruleStatusOfExistingCheckingAccount}" required
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 col-s3">
+                        <label>其他债务人或保证人</label>
+                        <div style="width:100%;margin-left:auto;margin-right:auto;">
+                            <select id="personalStatusAndSexSelect" name="otherDebtorsOrGuarantors"
+                                    class="form-control">
+                                <option selected>[[---其他债务人或保证人---]]</option>
+                                <option th:each="ruleOtherDebtorsOrGuarantors : ${otherDebtorsOrGuarantors}"
+                                        th:name="otherDebtorsOrGuarantors"
+                                        th:text="${ruleOtherDebtorsOrGuarantors}"
+                                        th:value="${ruleOtherDebtorsOrGuarantors}" required
+                                >
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 col-s3">
+                        <button class="btn btn-primary" type="submit" style="width:80%" th:id="giveMark"
+                                th:onclick="ajaxSubmit">Sign in
+                        </button>
+                    </div>
+                    <div class="col-3 col-s3"></div>
+                </div>
 
-						<button type="submit" class="btn btn-primary">预测</button>
+                <!-- <div class="row">
+                     <div class="col-3 col-s3"></div>
+                     <div class="col-3 col-s3"></div>
+                     <div class="col-3 col-s3"></div>
+                     <div class="col-3 col-s3"></div>
+                 </div>-->
+            </form>
+            <br/>
+            <form th:action="@{/rule/giveBatchMark}" method="post"  enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-3 col-s3"></div>
 
-					</form>
+                    <div class="col-3 col-s3">
 
-				</main>
-			</div>
-		</div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFileLang" lang="es" th:name="giveBatchMark">
+                            <label class="custom-file-label" for="customFileLang">Choose file</label>
+                        </div>
+                    </div>
+                    <div class="col-3 col-s3">
+                        <button class="btn btn-success" type="submit" style="width:80%"
+                                th:onclick="ajaxSubmit">批量预测
+                        </button>
+                    </div>
+                    <div class="col-3 col-s3"></div>
+                </div>
+            </form>
 
-		<!-- Bootstrap core JavaScript
-    ================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
-		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>
-		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+        </main>
+    </div>
+</div>
 
-		<!-- Icons -->
-		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
-		<script>
-			feather.replace()
-		</script>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
+<!--<script type="text/javascript" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>-->
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
 
-	</body>
+<!-- Icons -->
+<script type="text/javascript" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+
+    function ajaxSubmit() {
+        var loanUser_name = document.getElementById("loanUser_name").val();
+        var age = document.getElementById("age").val();
+        var durationMonth = document.getElementById("durationMonth").val();
+        var installmentIncome = document.getElementById("installmentIncome").val();
+        var creditAmount = document.getElementById("creditAmount").val();
+        var personalStatusAndSex = $('#personalStatusAndSexSelect option:selected').text();
+        var employmentSince = $('#employmentSince option:selected').text();
+        var savingsAccountAndBonds = $('#savingsAccountAndBondsSelect option:selected').text();
+        var creditHistory = $('#creditHistorySelect option:selected').text();
+        var statusSxistingCheckingAccount = $('#statusSxistingCheckingAccountSelect option:selected').text();
+        var otherDebtorsOrGuarantors = $('#otherDebtorsOrGuarantorsSelect option:selected').text();
+        var purpose = $('#purposeSelect option:selected').text();
+        $.ajax({
+            type: "POST",
+            data: {
+                loanUser_name: loanUser_name,
+                age: age,
+                durationMonth: durationMonth,
+                installmentIncome: installmentIncome,
+                creditAmount: creditAmount,
+                personalStatusAndSex: personalStatusAndSex,
+                employmentSince: employmentSince,
+                savingsAccountAndBonds: savingsAccountAndBonds,
+                creditHistory: creditHistory,
+                statusSxistingCheckingAccount: statusSxistingCheckingAccount,
+                otherDebtorsOrGuarantors: otherDebtorsOrGuarantors,
+                purpose: purpose,
+
+            },
+            success: function (data) {
+
+            },
+            error: function () {
+
+            }
+        });
+
+    }
+
+
+</script>
+<script type="text/javascript">
+    /* window.onload = function(){
+
+         var curPath=window.document.location.href;
+         var pathName=window.document.location.pathname;
+         var pos=curPath.indexOf(pathName);
+         var localhostPaht=curPath.substring(0,pos);
+         var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+         var params={
+             "name":"wangdneggao"
+         }
+         var json = JSON.stringify(params);
+         $.ajax({
+             url : localhostPaht + projectName+"/rule/giveMark",
+             data:json,
+             dataType:json,
+             type : 'post',
+             contentType : 'application/json;charset=utf-8',
+             success : function(result) {
+                 alert("success");
+                 console.log("获取用户所有功能成功");
+                 console.log("result "+JSON.stringify(result));
+             },
+             error : function(result, XMLHttpRequest, textStatus, errorThrown) {
+                 alert("error");
+                 console.log("获取用户所有功能失败");
+                 console.log("result "+JSON.stringify(result));
+                 console.log("menuJson "+result);
+                 console.log("JSON.stringify(obj) "+JSON.stringify(result));
+                 // 状态码
+                 console.log(XMLHttpRequest.status);
+                 console.log(XMLHttpRequest.toLocaleString());
+                 // 状态
+                 console.log(XMLHttpRequest.readyState);
+                 // 错误信息
+                 console.log(textStatus);
+             }
+         });
+     };*/
+
+</script>
+</body>
 
 </html>
