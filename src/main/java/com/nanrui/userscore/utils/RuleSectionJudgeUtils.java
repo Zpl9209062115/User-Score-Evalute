@@ -4,7 +4,6 @@ import com.nanrui.userscore.entities.LoanUser;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * @ClassName RuleSectionJudgeUtils
@@ -16,20 +15,18 @@ import java.util.regex.Pattern;
 public class RuleSectionJudgeUtils {
 
     String AGE_VARIABLE = "age";
-    String CREDITHISTORY_VARIABLE = "creditHistory";
-    String DURATIONMONTH_VARIABLE = "durationMonth";
-    String EMPLOYMENTSINCE = "employmentSince";
+    String CREDITHISTORY_VARIABLE = "credit_history";
+    String DURATIONMONTH_VARIABLE = "duration_month";
+    String EMPLOYMENTSINCE = "employment_since";
     String HOUSING_VARIABLE = "housing";
-    String SAVINGACCOUNTANDBONDS_VARIABLE = "savingsAccountAndBonds";
-    String INSTALLMENTPLANS_VARIABLE = "installmentPlans";
-    String STATUSSXISTINGCHECKINGACCOUNT_VARIABLE = "statusSxistingCheckingAccount";
-    String INSTALLMENTINCOME_VARIABLE = "installmentIncome";
-    String CREDITAMOUNT_VARIABLE = "creditAmount";
+    String SAVINGACCOUNTANDBONDS_VARIABLE = "savings_account_and_bonds";
+    String INSTALLMENTPLANS_VARIABLE = "installment_plans";
+    String STATUSSXISTINGCHECKINGACCOUNT_VARIABLE = "status_sxisting_checking_account";
+    String INSTALLMENTINCOME_VARIABLE = "installment_income";
+    String CREDITAMOUNT_VARIABLE = "credit_amount";
     String PURPOSE_VARIABLE = "purpose";
-    String OTHERDEBTORSORGUARANTORS_VARIABLE = "otherDebtorsOrGuarantors";
-    String SEX_VARIABLE = "sex";
-
-
+    String OTHERDEBTORSORGUARANTORS_VARIABLE = "other_debtors_or_guarantors";
+    String SEX_VARIABLE = "personal_status_and_sex";
 
     int pointsSum = 0;
 
@@ -39,45 +36,29 @@ public class RuleSectionJudgeUtils {
 
     LoanUser_GiveMark loanUser_giveMark_Finally = new LoanUser_GiveMark();
 
-    Map<String,Map<String,String>> mapClassify = null;
+    Map<String,Map<String,Integer>> mapClassify = null;
 
-    Map<String,String> mapVariableAndBinNew = new HashMap<>();
+    Map<String,Integer> mapVariableAndBinNew = new HashMap<>();
 
-    public List<LoanUser_GiveMark> ruleSectionJudge(String loanUserName,String loanUserId,LoanUser loanUser, Map<String, String> mapRule) {
+    public List<LoanUser_GiveMark> ruleSectionJudge(String loanUserName,String loanUserId,LoanUser loanUser, Map<String, Integer> mapRule) {
         sectionJudge_labelClassify(mapRule);
         if (0 != mapClassify.size()){
-            String age_Point = numSectionJudge_binClassify(loanUser.getAge(),mapClassify,AGE_VARIABLE);
-            String durationMonth_Point = numSectionJudge_binClassify(loanUser.getDurationMonth(),mapClassify,DURATIONMONTH_VARIABLE);
-            String installmentIncome_Point = numSectionJudge_binClassify(loanUser.getInstallmentIncome(),mapClassify,INSTALLMENTINCOME_VARIABLE);
-            String creditAmount_Point = numSectionJudge_binClassify(loanUser.getCreditAmount(),mapClassify,CREDITAMOUNT_VARIABLE);
+            Integer age_Point = numSectionJudge_binClassify(loanUser.getAge(),mapClassify,AGE_VARIABLE);
+            Integer durationMonth_Point = numSectionJudge_binClassify(loanUser.getDurationMonth(),mapClassify,DURATIONMONTH_VARIABLE);
+            Integer installmentIncome_Point = numSectionJudge_binClassify(loanUser.getInstallmentIncome(),mapClassify,INSTALLMENTINCOME_VARIABLE);
+            Integer creditAmount_Point = numSectionJudge_binClassify(loanUser.getCreditAmount(),mapClassify,CREDITAMOUNT_VARIABLE);
 
-            String housing_Point = stringSectionJudge_labelClassify(loanUser.getHousing(),mapClassify,HOUSING_VARIABLE);
-            String installmentPlans_Point = stringSectionJudge_labelClassify(loanUser.getInstallmentPlans(),mapClassify,INSTALLMENTPLANS_VARIABLE);
+            Integer housing_Point = stringSectionJudge_labelClassify(loanUser.getHousing(),mapClassify,HOUSING_VARIABLE);
+            Integer installmentPlans_Point = stringSectionJudge_labelClassify(loanUser.getInstallmentPlans(),mapClassify,INSTALLMENTPLANS_VARIABLE);
 
-            String purpose_Point = stringSectionJudge_labelClassify(loanUser.getPurpose(),mapClassify,PURPOSE_VARIABLE);
-            String employmentSince_Point = stringSectionJudge_labelClassify(loanUser.getEmploymentSince(),mapClassify,EMPLOYMENTSINCE);
-            String savingsAccountAndBonds_Point = stringSectionJudge_labelClassify(loanUser.getSavingsAccountAndBonds(),mapClassify,SAVINGACCOUNTANDBONDS_VARIABLE);
-            String creditHistory_Point = stringSectionJudge_labelClassify(loanUser.getCreditHistory(),mapClassify,CREDITHISTORY_VARIABLE);
-            String statusSxistingCheckingAccount_Point = stringSectionJudge_labelClassify(loanUser.getStatusSxistingCheckingAccount(),mapClassify,STATUSSXISTINGCHECKINGACCOUNT_VARIABLE);
-            String otherDebtorsOrGuarantors_Point = stringSectionJudge_labelClassify(loanUser.getOtherDebtorsOrGuarantors(),mapClassify,OTHERDEBTORSORGUARANTORS_VARIABLE);
+            Integer purpose_Point = stringSectionJudge_labelClassify(loanUser.getPurpose(),mapClassify,PURPOSE_VARIABLE);
+            Integer employmentSince_Point = stringSectionJudge_labelClassify(loanUser.getEmploymentSince(),mapClassify,EMPLOYMENTSINCE);
+            Integer savingsAccountAndBonds_Point = stringSectionJudge_labelClassify(loanUser.getSavingsAccountAndBonds(),mapClassify,SAVINGACCOUNTANDBONDS_VARIABLE);
+            Integer creditHistory_Point = stringSectionJudge_labelClassify(loanUser.getCreditHistory(),mapClassify,CREDITHISTORY_VARIABLE);
+            Integer statusSxistingCheckingAccount_Point = stringSectionJudge_labelClassify(loanUser.getStatusSxistingCheckingAccount(),mapClassify,STATUSSXISTINGCHECKINGACCOUNT_VARIABLE);
+            Integer otherDebtorsOrGuarantors_Point = stringSectionJudge_labelClassify(loanUser.getOtherDebtorsOrGuarantors(),mapClassify,OTHERDEBTORSORGUARANTORS_VARIABLE);
             pointsSum = Integer.valueOf(loanUser_giveMark_Finally.getBasicPoints()) + pointsSum;
-            loanUser_giveMark_Finally = new LoanUser_GiveMark(
-                    loanUserName,
-                    age_Point,
-                    null,
-                    durationMonth_Point,
-                    installmentIncome_Point,
-                    employmentSince_Point,
-                    housing_Point,
-                    installmentPlans_Point,
-                    savingsAccountAndBonds_Point,
-                    creditHistory_Point,
-                    creditAmount_Point,
-                    statusSxistingCheckingAccount_Point,
-                    purpose_Point,
-                    otherDebtorsOrGuarantors_Point,
-                    String.valueOf(pointsSum),
-                    loanUserId);
+            loanUser_giveMark_Finally = new LoanUser_GiveMark(loanUserName,age_Point,null,durationMonth_Point,installmentIncome_Point,employmentSince_Point,housing_Point,installmentPlans_Point,savingsAccountAndBonds_Point,creditHistory_Point,creditAmount_Point,statusSxistingCheckingAccount_Point,purpose_Point,otherDebtorsOrGuarantors_Point,pointsSum,451,loanUserId);
             listLabelSection.add(loanUser_giveMark_Finally);
         }
         return listLabelSection;
@@ -89,15 +70,15 @@ public class RuleSectionJudgeUtils {
      * @param mapRule
      * @return
      */
-    public void sectionJudge_labelClassify(Map<String, String> mapRule) {
-        String points = "";
+    public void sectionJudge_labelClassify(Map<String, Integer> mapRule) {
+        Integer points = 0;
         System.out.println("--------------------------------是数据项，需要对录入的值进行区间判断--------------------------------");
-        for (Map.Entry<String, String> map : mapRule.entrySet()) {
+        for (Map.Entry<String, Integer> map : mapRule.entrySet()) {
             String mapKey = map.getKey();
             String[] split = mapKey.split("@");
             String variable = split[0];
             String bin = split[1];
-            points = map.getValue();
+            points = Integer.valueOf(map.getValue());
 
             boolean contains = false;
 
@@ -109,7 +90,7 @@ public class RuleSectionJudgeUtils {
             }
 
             if (contains){
-                Map<String, String> mapVariableAndBin = mapClassify.get(variable);
+                Map<String, Integer> mapVariableAndBin = mapClassify.get(variable);
                 mapVariableAndBin.put(bin, points);
             } else {
                 if (null ==mapClassify){
@@ -123,12 +104,12 @@ public class RuleSectionJudgeUtils {
 
     }
 
-    public String numSectionJudge_binClassify(String loanData, Map<String, Map<String,String>> ruleMapBin, String lableValue) {
-        Map<String, String> ruleBin = ruleMapBin.get(lableValue);
+    public Integer numSectionJudge_binClassify(String loanData, Map<String, Map<String,Integer>> ruleMapBin, String lableValue) {
+        Map<String, Integer> ruleBin = ruleMapBin.get(lableValue);
         boolean inTheInterval = false;
-        String points = "";
-        for (Map.Entry<String, String> ruleBinMap : ruleBin.entrySet()) {
-            points = ruleBinMap.getValue();
+        Integer points = 0;
+        for (Map.Entry<String, Integer> ruleBinMap : ruleBin.entrySet()) {
+            points = Integer.valueOf(ruleBinMap.getValue());
             inTheInterval = a.isInTheInterval(loanData, ruleBinMap.getKey());
             if (inTheInterval) {
                 /*loanUser_giveMark.set(lableValue, ruleBin.getValue());*/
@@ -140,12 +121,12 @@ public class RuleSectionJudgeUtils {
         return points;
     }
 
-    public String stringSectionJudge_labelClassify(String loanData, Map<String, Map<String,String>> ruleMapBin, String lableValue){
-        String points = "";
-        Map<String, String> ruleBin = ruleMapBin.get(lableValue);
-        for (Map.Entry<String,String> ruleBinMap : ruleBin.entrySet()){
+    public Integer stringSectionJudge_labelClassify(String loanData, Map<String, Map<String,Integer>> ruleMapBin, String lableValue){
+        Integer points = 0;
+        Map<String, Integer> ruleBin = ruleMapBin.get(lableValue);
+        for (Map.Entry<String,Integer> ruleBinMap : ruleBin.entrySet()){
             String mapKey = ruleBinMap.getKey();
-            String mapValue = ruleBinMap.getValue();
+            Integer mapValue = ruleBinMap.getValue();
             if (loanData.equals(mapKey)){
                 points = mapValue;
                 pointsSum = pointsSum + Integer.valueOf(ruleBinMap.getValue());

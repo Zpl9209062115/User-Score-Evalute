@@ -1,15 +1,19 @@
 package com.nanrui.userscore.controller;
 
 import com.nanrui.userscore.entities.LoanUser;
+import com.nanrui.userscore.entities.LoanUser_GiveMark;
 import com.nanrui.userscore.service.RuleService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -98,5 +102,6 @@ public class RuleController {
         }
         return "redirect:/userList";
     }
+
 
 }

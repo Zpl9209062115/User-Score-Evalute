@@ -3,6 +3,7 @@ package com.nanrui.userscore.utils;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import com.nanrui.userscore.entities.RuleBean;
+import com.nanrui.userscore.entities.SourceData;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,21 +25,13 @@ public class ReadRegulationCsv {
 
     public static char separator = ',';
 
+    boolean flag = false;
+    GenerativeRuleUtils generativeRuleUtils = new GenerativeRuleUtils();
+    String strNum_sourceDataDispose = "";
+
     String variable = "";
     String bin = "";
     String points = "";
-
-    /**
-     * 1、保存从文件中读取的数据中包含冒号的数据。
-     * 2、根据对现有规则的分析，包含冒号的数据是
-     *          female : divorced/separated/married
-     * 保存到colonMap中进行处理，处理成
-     *          female : divorced
-     *          female :separated
-     *          female :married
-     * 3、存入数据库
-     */
-    Map<String,String> colonMap = new HashMap<>();
 
     /**
      * 1、保存从文件中读取的数据中包含特殊字符的数据。
@@ -99,26 +92,14 @@ public class ReadRegulationCsv {
                 variable = reader.get("variable").trim();
                 bin = reader.get("bin").trim();
                 points = reader.get("points").trim();
-                boolean symbolBooleanResult = bin.contains("<") || bin.contains("<=") || bin.contains(">") || bin.contains(">=");
-                boolean numBooleanResult = p.matcher(bin).matches();
 
                 key = variable+"@"+bin.trim();
                 value = points.trim();
 
-                if (null != bin){
-                    if (bin.contains(":")){
-                        colonMap.put(key,value);
-                    } else {
-                        colonNotMap.put(key,value);
-                    }
-                }
-                // 读一整行
-                //System.out.println(reader.getRawRecord());
+
+                colonNotMap.put(key,value);
             }
 
-            if (0 != colonMap.size()){
-                mapCsv.put("colonMap",colonMap);
-            }
             if (0 != colonNotMap.size()){
                 mapCsv.put("colonNotMap",colonNotMap);
             }
@@ -132,6 +113,63 @@ public class ReadRegulationCsv {
             }
         }
         return mapCsv;
+    }
+
+    public List<SourceData> readSourceData(String filePathSourceData) throws Exception {
+        CsvReader reader = null;
+        List<SourceData> sourceDataList = new ArrayList<>();
+        try {
+            //如果生产文件乱码，windows下用gbk，linux用UTF-8
+            reader = new CsvReader(filePathSourceData, separator, Charset.forName("GBK"));
+
+            // 读取表头
+            reader.readHeaders();
+            //String[] headArray = reader.getHeaders();//获取标题
+            // 逐条读取记录，直至读完
+            int columnCount = reader.getColumnCount();
+            System.out.println(columnCount);
+            long currentRecord = reader.getCurrentRecord();
+            System.out.println(currentRecord);
+            while (reader.readRecord()) {
+                SourceData sourceData = readSourceData_javaBeanDispose(reader);
+                sourceDataList.add(sourceData);
+            }
+            return sourceDataList;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public SourceData readSourceData_javaBeanDispose(CsvReader reader) throws IOException {
+        String statusSxistingCheckingAccount = stringBooleanNumDispose(reader.get("status.of.existing.checking.account").trim());
+        String durationMonth = stringBooleanNumDispose(reader.get("duration.in.month").trim());
+        String creditHistory = stringBooleanNumDispose(reader.get("credit.history").trim());
+        String purpose = stringBooleanNumDispose(reader.get("purpose").trim());
+        String creditAmount = stringBooleanNumDispose(reader.get("credit.amount"));
+        String savingsAccountAndBonds = stringBooleanNumDispose(reader.get("savings.account.and.bonds"));
+        String employmentSince = stringBooleanNumDispose(reader.get("present.employment.since"));
+        String installmentIncome = stringBooleanNumDispose(reader.get("installment.rate.in.percentage.of.disposable.income"));
+        String personalStatusAndSex = stringBooleanNumDispose(reader.get("personal.status.and.sex"));
+        String otherDebtorsOrGuarantors = stringBooleanNumDispose(reader.get("other.debtors.or.guarantors"));
+        String property = stringBooleanNumDispose(reader.get("property"));
+        String age = stringBooleanNumDispose(reader.get("age.in.years"));
+        String installmentPlans = stringBooleanNumDispose(reader.get("other.installment.plans"));
+        String housing = stringBooleanNumDispose(reader.get("housing"));
+        String creditability = stringBooleanNumDispose(reader.get("creditability"));
+        SourceData sourceDataBean = new SourceData(age,personalStatusAndSex,durationMonth,installmentIncome,employmentSince,housing,installmentPlans,savingsAccountAndBonds,creditHistory,creditAmount,statusSxistingCheckingAccount,purpose,otherDebtorsOrGuarantors,property,creditability);
+        return sourceDataBean;
+    }
+
+    public String stringBooleanNumDispose(String string){
+        boolean symbolBooleanResult = string.contains("<") || string.contains("<=") || string.contains(">") || string.contains(">=");
+        boolean numBooleanResult = p.matcher(string).matches();
+        if (symbolBooleanResult && numBooleanResult){
+            strNum_sourceDataDispose = generativeRuleUtils.utils(string);
+        } else {
+            strNum_sourceDataDispose = string;
+        }
+        return strNum_sourceDataDispose;
     }
 
     /**
@@ -165,7 +203,6 @@ public class ReadRegulationCsv {
                 }
             }
         }
-
         return isSuccess;
     }
 

@@ -62,41 +62,43 @@
             </div>
             <div class="container">
                 <div class="form-row">
-                    <div class="col-md-8 order-md-1">
+                    <div class="col-md-12 order-md-1">
                         <form class="needs-validation" th:action="@{/rule/giveMark}" method="post">
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6">
                                     <label for="loanUser_name">姓名</label>
                                     <input class="form-control" id="loanUser_name" placeholder="张XX"
                                            th:name="loanUser_name"
                                            required>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6">
                                     <label for="age">年龄</label>
                                     <input class="form-control" id="age" placeholder="1-100" th:name="age" required>
+                                </div><br>
+
+                                <div class="col-md-6"  style="margin-top:20px;">
+                                    <label for="durationMonth">社保缴纳时间</label>
+                                    <input class="form-control" id="durationMonth" placeholder="20" th:name="durationMonth"
+                                           required>
+                                </div>
+                                <div class="col-md-6" style="margin-top:20px;">
+                                    <label for="installmentIncome">分期付款率占可支配收入的百分比</label>
+                                    <input class="form-control" id="installmentIncome" placeholder="3"
+                                           th:name="installmentIncome" required>
+                                </div><br>
+
+                                <div class="col-md-6" style="margin-top:20px;">
+                                    <label for="creditAmount">欠款金额</label>
+                                    <input class="form-control" id="creditAmount" placeholder="0" th:name="creditAmount"
+                                           required>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="durationMonth">社保缴纳时间</label>
-                                <input class="form-control" id="durationMonth" placeholder="20" th:name="durationMonth"
-                                       required>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="installmentIncome">分期付款率占可支配收入的百分比</label>
-                                <input class="form-control" id="installmentIncome" placeholder="3"
-                                       th:name="installmentIncome" required>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="creditAmount">欠款金额</label>
-                                <input class="form-control" id="creditAmount" placeholder="0" th:name="creditAmount"
-                                       required>
-                            </div>
 
                             <div class="row">
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4"  style="margin-top:20px;">
                                     <label>用途</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="purpose" class="form-control">
@@ -108,13 +110,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4"  style="margin-top:20px;">
                                     <label>从业经历</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="employmentSince"
                                                 class="form-control">
                                             <option selected>[[---从业经历---]]</option>
-                                            <option th:each="rulePresentEmploymentSince : ${employmentSince}"
+                                            <option th:each="rulePresentEmploymentSince : ${employment_since}"
                                                     th:name="employmentSince"
                                                     th:text="${rulePresentEmploymentSince}"
                                                     th:value="${rulePresentEmploymentSince}"
@@ -124,13 +126,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4" style="margin-top:20px;">
                                     <label>储蓄存款及债券</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="savingsAccountAndBonds"
                                                 class="form-control">
                                             <option selected>[[---储蓄存款及债券---]]</option>
-                                            <option th:each="ruleSavingsAccountAndBonds : ${savingsAccountAndBonds}"
+                                            <option th:each="ruleSavingsAccountAndBonds : ${savings_account_and_bonds}"
                                                     th:name="savingsAccountAndBonds"
                                                     th:text="${ruleSavingsAccountAndBonds}"
                                                     th:value="${ruleSavingsAccountAndBonds}"
@@ -141,13 +143,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3" style="margin-top:20px;">
                                     <label>信用历史</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="creditHistory"
                                                 class="form-control">
                                             <option selected>[[---信用历史---]]</option>
-                                            <option th:each="ruleCreditHistory : ${creditHistory}"
+                                            <option th:each="ruleCreditHistory : ${credit_history}"
                                                     th:name="creditHistory"
                                                     th:text="${ruleCreditHistory}" th:value="${ruleCreditHistory}"
                                                     required
@@ -157,13 +159,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3" style="margin-top:20px;">
                                     <label>现有支票帐户的状况</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="statusSxistingCheckingAccount"
                                                 class="form-control">
                                             <option selected>[[---现有支票帐户的状况---]]</option>
-                                            <option th:each="ruleStatusOfExistingCheckingAccount : ${statusSxistingCheckingAccount}"
+                                            <option th:each="ruleStatusOfExistingCheckingAccount : ${status_sxisting_checking_account}"
                                                     th:name="statusSxistingCheckingAccount"
                                                     th:text="${ruleStatusOfExistingCheckingAccount}"
                                                     th:value="${ruleStatusOfExistingCheckingAccount}" required
@@ -173,13 +175,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3" style="margin-top:20px;">
                                     <label>其他债务人或保证人</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="otherDebtorsOrGuarantors"
                                                 class="form-control">
                                             <option selected>[[---其他债务人或保证人---]]</option>
-                                            <option th:each="ruleOtherDebtorsOrGuarantors : ${otherDebtorsOrGuarantors}"
+                                            <option th:each="ruleOtherDebtorsOrGuarantors : ${other_debtors_or_guarantors}"
                                                     th:name="otherDebtorsOrGuarantors"
                                                     th:text="${ruleOtherDebtorsOrGuarantors}"
                                                     th:value="${ruleOtherDebtorsOrGuarantors}" required

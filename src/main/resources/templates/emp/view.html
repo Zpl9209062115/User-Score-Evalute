@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="commons/bar::#sidebar(activeUri='empRatings')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div id="container" style="width: 1200px;height:400px;"></div>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
+<!--<script type="text/javascript" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>-->
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" th:src="@{/asserts/js/feather.min.js}"></script>
+<script type="text/javascript" th:src="@{/asserts/js/echarts.min.js}" th:charset="utf-8" ></script>
+<script>
+    feather.replace()
+</script>
+<script th:inline="javascript">
+
+    var search = window.location.search;
+    var arr = search.split("?");
+    var paramsId = arr[1].split("=")[1];
+
+    var curPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var pos = curPath.indexOf(pathName);
+    var localhostPath = curPath.substring(0, pos);
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    var params = {
+        loanUser_id_giveMark:paramsId
+    }
+    var json = JSON.stringify(params);
+
+    window.onload = function () {
+        $.ajax({
+            url: localhostPath + projectName + "/dataView/getDataView",
+            dataType: "json",
+            data: json,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            success: function (data) {
+                var dom = document.getElementById("container");
+                var myChart = echarts.init(dom);
+                var app = {};
+                option = null;
+                option = {
+                    title: {
+                        text: '用户得分组成',
+                        subtext: 'From ExcelHome',
+                        sublink: 'http://e.weibo.com/1341556070/AjQH99che'
+                    },
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        },
+                        formatter: function (params) {
+                            var tar = params[0];
+                            return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type : 'category',
+                        splitLine: {show:false},
+                        data : ['总分','基础分','年龄','信用历史','社保缴纳时间','就业历史情况(从业经历)','住房情况','储蓄存款及债券','其他分期付款计划','现有支票帐户的状况','分期付款率占可支配收入的百分比', '欠款金额','用途','其他债务人或保证人','性别']
+                    },
+                    yAxis: {
+                        type : 'value'
+                    },
+                    series: [
+                        {
+                            name: '辅助',
+                            type: 'bar',
+                            stack:  '总量',
+                            itemStyle: {
+                                normal: {
+                                    barBorderColor: 'rgba(0,0,0,0)',
+                                    color: 'rgba(0,0,0,0)'
+                                },
+                                emphasis: {
+                                    barBorderColor: 'rgba(0,0,0,0)',
+                                    color: 'rgba(0,0,0,0)'
+                                }
+                            },
+                                data: []
+                        },
+                        {
+                            name: '得分',
+                            type: 'bar',
+                            stack: '总量',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside'
+                                }
+                            },
+                            data:[data.sumPoints,data.basicPoints, data.ageScore_giveMark, data.creditHistoryScore_giveMark,data.durationMonthScore_giveMark,
+                                data.employmentSinceScore_giveMark, data.housingScore_giveMark, data.savingsAccountAndBondsScore_giveMark,
+                                data.installmentPlansScore_giveMark,data.statusSxistingCheckingAccountScore_giveMark,data.installmentIncomeScore_giveMark,
+                                data.creditAmountScore_giveMark,data.purposeScore_giveMark,data.otherDebtorsOrGuarantorsScore_giveMark,data.personalStatusAndSexScore_giveMark]
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+
+            },
+            error: function (data) {
+                alert("error");
+                console.log("获取用户所有功能失败");
+            }
+        });
+    }
+</script>
+<script type="text/javascript"></script>
+</body>
+</html>

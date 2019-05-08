@@ -1,7 +1,7 @@
 package com.nanrui.userscore.service;
 
 import com.nanrui.userscore.dao.LoanUserDao;
-import com.nanrui.userscore.dao.LoanUser_GiveMarkDao;
+import com.nanrui.userscore.dao.LoanUserGiveMarkDao;
 import com.nanrui.userscore.dao.RuleDao;
 import com.nanrui.userscore.entities.LoanUser;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
@@ -9,6 +9,7 @@ import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.utils.RuleSectionJudgeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,7 +31,7 @@ public class RuleService {
     LoanUserDao loanUserDao;
 
     @Autowired
-    LoanUser_GiveMarkDao loanUser_giveMarkDao;
+    LoanUserGiveMarkDao giveMarkDao;
 
     Map<String, List<String>> ruleAllLabelVariable = new HashMap<>();
 
@@ -44,11 +45,11 @@ public class RuleService {
      * @return
      */
     @CachePut(value = "ruleAll" ,key = "#result.get(#key)")
-    public Map<String,String> getAllRule(){
+    public Map<String,Integer> getAllRule(){
         List<RuleBean> all = ruleDao.findAll();
         String key = "";
-        String value = "";
-        Map<String,String> ruleAllMap = new HashMap<>();
+        Integer value = 0;
+        Map<String,Integer> ruleAllMap = new HashMap<>();
         for (int i = 0;i<all.size();i++){
             RuleBean ruleBean = all.get(i);
             key = ruleBean.getVariable() + "@" + ruleBean.getBin();
@@ -101,9 +102,9 @@ public class RuleService {
          * 第二步：将录入需要评分的用户进行评分
          */
         RuleSectionJudgeUtils utils = new RuleSectionJudgeUtils();
-        Map<String, String> allRule = getAllRule();
+        Map<String, Integer> allRule = getAllRule();
         List<LoanUser_GiveMark> loanUser_giveMarks = utils.ruleSectionJudge(loanUserToMySQL.getLoanUser_name(),loanUserToMySQL.getLoanUser_id().toString(), loanUser, allRule);
-        loanUser_giveMarkDao.save(loanUser_giveMarks);
+        giveMarkDao.save(loanUser_giveMarks);
         return loanUser_giveMarks;
     }
 

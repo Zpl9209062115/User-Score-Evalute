@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -40,36 +39,6 @@ public class GenerativeRuleUtils {
     Pattern p = Pattern.compile(".*\\d+.*");
 
     /**
-     * 处理带冒号的
-     * @param colonMap
-     * @return
-     */
-    public List<RuleBean> colonMapDispose(Map<String,String> colonMap){
-        for (Map.Entry<String,String> mapDispose : colonMap.entrySet()){
-            String[] splitVariable = mapDispose.getKey().split("@");
-            variable = variableDispose(splitVariable[0]);
-            bin = splitVariable[1];
-            /**
-             * 处理数据中的Inf,后面的工具类对于Inf不识别
-             */
-            if (bin.contains("Inf") || bin.contains("-Inf")){
-                bin = bin.replaceAll("Inf","∞");
-            }
-            points = mapDispose.getValue();
-            /**
-             * 处理含':'的bin
-             */
-            if (null != bin && !"".equals(bin)){
-                String[] splitColon = bin.split("[:]");
-                variable_sex = splitColon[0];
-                ruleBeanList = specialCharBeanDispose(variable,splitColon[1],variable_sex,points);
-            }
-
-        }
-        return ruleBeanList;
-    }
-
-    /**
      * 处理不带冒号的
      * @param colonMap
      * @return
@@ -79,6 +48,7 @@ public class GenerativeRuleUtils {
             String[] splitVariable = mapDispose.getKey().split("@");
             variable = variableDispose(splitVariable[0]);
             bin = splitVariable[1];
+
             /**
              * 处理数据中的Inf,后面的工具类对于Inf不识别
              */
@@ -111,17 +81,17 @@ public class GenerativeRuleUtils {
                         if (symbolDisposeBoolean(splitColon_bin[i],null) && numDisposeBoolean(splitColon_bin[i])){
                             String bin = utils(splitColon_bin[i]);
                             String[] split = bin.split("->");
-                            bean = new RuleBean(variable.trim(),null,split[0].trim(),points.trim(),split[1].trim());
+                            bean = new RuleBean(variable.trim(),null,split[0].trim(),Integer.valueOf(points.trim()),split[1].trim(),split[2].trim());
                         } else{
-                            bean = new RuleBean(variable.trim(),null,splitColon_bin[i].trim(),points.trim(),null);
+                            bean = new RuleBean(variable.trim(),null,splitColon_bin[i].trim(),Integer.valueOf(points.trim()),null,"str");
                         }
                     } else {
                         if (symbolDisposeBoolean(splitColon_bin[i],null) && numDisposeBoolean(splitColon_bin[i])){
                             String bin = utils(splitColon_bin[i]);
                             String[] split = bin.split("->");
-                            bean = new RuleBean(variable.trim(),null,split[0].trim(),points,split[1].trim());
+                            bean = new RuleBean(variable.trim(),null,split[0].trim(),Integer.valueOf(points.trim()),split[1].trim(),split[2].trim());
                         } else{
-                            bean = new RuleBean(variable.trim(),variable_sex.trim(),splitColon_bin[i].trim(),points.trim(),null);
+                            bean = new RuleBean(variable.trim(),variable_sex.trim(),splitColon_bin[i].trim(),Integer.valueOf(points.trim()),null,"str");
                         }
                     }
                     ruleBeanList.add(bean);
@@ -131,9 +101,11 @@ public class GenerativeRuleUtils {
             if (symbolDisposeBoolean(splitColon,null) && numDisposeBoolean(splitColon)){
                 String bin = utils(splitColon);
                 String[] split = bin.split("->");
-                bean = new RuleBean(variable.trim(),null,split[0].trim(),points,split[1].trim());
-            } else {
-                bean = new RuleBean(variable.trim(),null,splitColon.trim(),points.trim(),null);
+                bean = new RuleBean(variable.trim(),null,split[0].trim(),Integer.valueOf(points.trim()),split[1].trim(),split[2].trim());
+            } else if (splitColon.contains("[")||splitColon.contains("(")||splitColon.contains("]")||splitColon.contains(")")){
+                bean = new RuleBean(variable.trim(),null,splitColon.trim(),Integer.valueOf(points.trim()),null,"num");
+            }else {
+                bean = new RuleBean(variable.trim(),null,splitColon.trim(),Integer.valueOf(points.trim()),null,"str");
             }
             ruleBeanList.add(bean);
         }
@@ -151,72 +123,76 @@ public class GenerativeRuleUtils {
         List<Map<Integer,String>> listMapCombination = new ArrayList<>();
         List<String> ellipsisList = new ArrayList<>();
         int num = 0;
-        String[] split1 = str1.split("[...]");
-        for (int i = 0; i < split1.length; i++) {
-            if (!split1[i].equals("")) {
-                count ++;
-                ellipsisList.add(split1[i]);
-            }
-        }
-
-        /**
-         * 500 <=
-         * < 1000 DM
-         */
-        String conmbinationString = "";
-        for (int i =0;i<ellipsisList.size();i++){
-            /**
-             * list.size() = 2
-             */
-            String[] split = ellipsisList.get(i).split(" ");
-            for (int j = 0;j<split.length;j++){
-                if(!"".equals(split[j])){
-                    boolean symbolBooleanResult = split[j].contains("<") || split[j].contains("<=") || split[j].contains(">") || split[j].contains(">=");
-                    boolean numBooleanResult = p.matcher(split[j]).matches();
-                    /**
-                     * 判断分割后的字符串是否为数字
-                     */
-                    if (numBooleanResult) {
-                        num1 = split[j];
-                    }
-                    /**
-                     * 判断分割后的字符串是否为符号
-                     */
-                    if (symbolBooleanResult){
-                        symbol1 = split[j];
-                    }
-
-                    /**
-                     * 单位的获取
-                     */
-                    if (!symbolBooleanResult && !numBooleanResult){
-                        unit = split[j];
-                    }
-
-                    /**
-                     * 将分割后的数组和符号进行第一次组合
-                     */
-                    if (null != num1 && null != symbol1){
-                        if (symbolBooleanResult || numBooleanResult){
-                            conmbinationString = combinationNumAndSymbol_1(num1,symbol1,count);
-                            num ++;
-                            mapCombination.put(num,conmbinationString);
-                            listMapCombination.add(mapCombination);
-                            num1 = null;
-                            symbol1 = null;
-                        }
-                    }
-
+        if (str1.contains("...")){
+            String[] split1 = str1.split("[...]");
+            for (int i = 0; i < split1.length; i++) {
+                if (!split1[i].equals("")) {
+                    count ++;
+                    ellipsisList.add(split1[i]);
                 }
             }
-        }
-        /**
-         * 将分割后的数组和符号进行第二次组合
-         */
-        sFinally = combinationNumAndSymbol_2(listMapCombination);
 
-        System.out.println(sFinally + "->" + unit);
-        return sFinally + "->" +unit;
+            /**
+             * 500 <=
+             * < 1000 DM
+             */
+            String conmbinationString = "";
+            for (int i =0;i<ellipsisList.size();i++){
+                /**
+                 * list.size() = 2
+                 */
+                String[] split = ellipsisList.get(i).split(" ");
+                for (int j = 0;j<split.length;j++){
+                    if(!"".equals(split[j])){
+                        boolean symbolBooleanResult = split[j].contains("<") || split[j].contains("<=") || split[j].contains(">") || split[j].contains(">=");
+                        boolean numBooleanResult = p.matcher(split[j]).matches();
+                        /**
+                         * 判断分割后的字符串是否为数字
+                         */
+                        if (numBooleanResult) {
+                            num1 = split[j];
+                        }
+                        /**
+                         * 判断分割后的字符串是否为符号
+                         */
+                        if (symbolBooleanResult){
+                            symbol1 = split[j];
+                        }
+
+                        /**
+                         * 单位的获取
+                         */
+                        if (!symbolBooleanResult && !numBooleanResult){
+                            unit = split[j];
+                        }
+
+                        /**
+                         * 将分割后的数组和符号进行第一次组合
+                         */
+                        if (null != num1 && null != symbol1){
+                            if (symbolBooleanResult || numBooleanResult){
+                                conmbinationString = combinationNumAndSymbol_1(num1,symbol1,count);
+                                num ++;
+                                mapCombination.put(num,conmbinationString);
+                                listMapCombination.add(mapCombination);
+                                num1 = null;
+                                symbol1 = null;
+                            }
+                        }
+
+                    }
+                }
+            }
+            /**
+             * 将分割后的数组和符号进行第二次组合
+             */
+            sFinally = combinationNumAndSymbol_2(listMapCombination);
+            sFinally = sFinally + "->" + unit + "->" + "num";
+        }else {
+            sFinally = str1 + "->" + unit + "->" +  "num";
+        }
+
+        return sFinally;
     }
 
     /**
@@ -375,46 +351,46 @@ public class GenerativeRuleUtils {
                 variableDisposeStr = "age";
                 break;
             case "credit.history":
-                variableDisposeStr = "creditHistory";
+                variableDisposeStr = "credit_history";
                 break;
             case "duration.in.month" :
-                variableDisposeStr = "durationMonth";
+                variableDisposeStr = "duration_month";
                 break;
             case "present.employment.since" :
-                variableDisposeStr = "employmentSince";
+                variableDisposeStr = "employment_since";
                 break;
             case "housing" :
                 variableDisposeStr = "housing";
                 break;
             case "savings.account.and.bonds" :
-                variableDisposeStr = "savingsAccountAndBonds";
+                variableDisposeStr = "savings_account_and_bonds";
                 break;
             case "other.installment.plans" :
-                variableDisposeStr = "installmentPlans";
+                variableDisposeStr = "installment_plans";
                 break;
             case "status.of.existing.checking.account" :
-                variableDisposeStr = "statusSxistingCheckingAccount";
+                variableDisposeStr = "status_sxisting_checking_account";
                 break;
             case "installment.rate.in.percentage.of.disposable.income" :
-                variableDisposeStr = "installmentIncome";
+                variableDisposeStr = "installment_income";
                 break;
             case "credit.amount" :
-                variableDisposeStr = "creditAmount";
+                variableDisposeStr = "credit_amount";
                 break;
             case "purpose" :
                 variableDisposeStr = "purpose";
                 break;
             case "other.debtors.or.guarantors" :
-                variableDisposeStr = "otherDebtorsOrGuarantors";
+                variableDisposeStr = "other_debtors_or_guarantors";
                 break;
             case "personal.status.and.sex.female" :
-                variableDisposeStr = "sexFemale";
+                variableDisposeStr = "personal_status_and_sex";
                 break;
             case "personal.status.and.sex" :
-                variableDisposeStr = "sex";
+                variableDisposeStr = "personal_status_and_sex";
                 break;
             case "personal.status.and.sex.male" :
-                variableDisposeStr = "sexMale";
+                variableDisposeStr = "personal_status_and_sex";
                 break;
 
         }

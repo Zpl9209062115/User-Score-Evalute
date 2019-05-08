@@ -5,7 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 /**
- * 导入需要评分的用户信息
+ * 通过前端页面导入的需要进行评分的用户信息，
+ *      分为两个部分，单个用户的信息，和多个用户的信息，这个是相对应的JavaBean
  * @ClassName loanUser
  * @Description TODO
  * @Author ZPL

@@ -2,8 +2,10 @@ package com.nanrui.userscore.service;
 
 import com.nanrui.userscore.dao.LoanUserDao;
 import com.nanrui.userscore.dao.RuleDao;
+import com.nanrui.userscore.dao.SourceDataDao;
 import com.nanrui.userscore.entities.LoanUser;
 import com.nanrui.userscore.entities.RuleBean;
+import com.nanrui.userscore.entities.SourceData;
 import com.nanrui.userscore.utils.GenerativeRuleUtils;
 import com.nanrui.userscore.utils.IntervalUtil;
 import com.nanrui.userscore.utils.ReadRegulationCsv;
@@ -12,6 +14,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +46,12 @@ public class EmpService {
 
     @Autowired
     RuleDao ruleDao;
+
+    @Autowired
+    SourceDataDao sourceDataDao;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public static IntervalUtil a = new IntervalUtil();
 
@@ -82,13 +92,15 @@ public class EmpService {
     public void Rule(){
         System.out.println("启动时加载-------------");
         String filePath = "D:/aa/3.csv";
+        String filePathSourceData = "D:/aa/train1.csv";
         System.out.println("=========服务启动执行===========");
         try {
-            /**
-             * 读取已经生成的规则csv文件
-             */
             ReadRegulationCsv csv = new ReadRegulationCsv();
+            /**
+             * 1、读取已经生成的规则csv文件
+             */
             csvMap = csv.readCSV(filePath);
+
             /**
              * 根据文件生成规则:把生成的mapRuleCsv放入处理工具类
              */
@@ -99,9 +111,7 @@ public class EmpService {
              *      剩下的判别在对应的里面进行
              */
             for (Map.Entry<String, Map<String, String>> mapRule : csvMap.entrySet()){
-                if (("colonMap").equals(mapRule.getKey())){
-                    listColon = generativeRuleUtils.colonMapDispose(mapRule.getValue());
-                }  else {
+                if (("colonNotMap").equals(mapRule.getKey())){
                     listOther = generativeRuleUtils.colonNotMapDispose(mapRule.getValue());
                 }
             }
@@ -114,6 +124,16 @@ public class EmpService {
                 ruleDao.save(listAll);
             }
 
+
+
+            /**
+             * 2、读取原始数据
+             */
+            List<SourceData> sourceDataList = csv.readSourceData(filePathSourceData);
+            if (null != sourceDataList){
+                sourceDataDao.deleteAll();
+                sourceDataDao.save(sourceDataList);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
