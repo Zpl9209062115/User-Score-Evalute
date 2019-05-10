@@ -83,8 +83,6 @@
                     </button>
                 </div>
             </div>
-
-
             <div id="container" style="width: 1200px;height:600px;"></div>
         </main>
     </div>
@@ -99,6 +97,10 @@
 <script type="text/javascript" th:src="@{/asserts/js/feather.min.js}"></script>
 <script type="text/javascript" src="asserts/js/popper.min.js" th:href="@{/webjars/popper.js/1.14.3/popper.js}"></script>
 <script type="text/javascript" th:src="@{/asserts/js/echarts.min.js}" th:charset="utf-8"></script>
+
+<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+
+<script type="text/javascript" src="DataTables/datatables.min.js"></script>
 <script>
     feather.replace()
 </script>
@@ -112,7 +114,7 @@
     var localhostPath = curPath.substring(0, pos);
     var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
     var params = {
-
+        "section": "10"
     }
     var json = JSON.stringify(params);
 
@@ -137,26 +139,25 @@
                 var defaultUser_data = [];
                 //比值集合
                 var specificValue = [];
-
-                alert(result);
+                //横坐标
+                var xLabel = [];
                 for (var i = 0;i<result.length;i++){
                     var  bean = result[i];
                     if (bean.creditability == "0"){
                         defaultUser_data.push(bean.count);
                     } else{
                         keepTheUser_data.push(bean.count);
+                        xLabel.push(bean.section);
                     }
                 }
-                for (var j = 0;j<10;j++){
+                for (var j = 0;j<result.length/2;j++){
                     var sum = keepTheUser_data[j]+defaultUser_data[j];
                     var specific = keepTheUser_data[j]/sum;
-                    debugger
                     if (isNaN(specific)){
                         specific = 0;
                     }else {
                         specific == specific.toFixed(specific);
                     }
-                    alert(specific);
                     specificValue.push(specific);
                 }
 
@@ -193,12 +194,16 @@
                     xAxis: [
                         {
                             type: 'category',
+                            axisLabel:{
+                                interval: 0
+                            },
                             axisTick: {
                                 alignWithLabel: true
                             },
-                            data: [
+                            /*data: [
                                 '[-Inf,220)','[220,283)','[283,345)','[345,408)','[408,470)','[470,532)','[532,595)','[595,657)','[657,720)','[720,Inf)'
-                            ]
+                            ]*/
+                            data : xLabel
                         }
                     ],
                     yAxis: [
@@ -245,7 +250,7 @@
                                 }
                             },
                             axisLabel: {
-                                formatter: '{value} %'
+                                formatter: '{value} '
                             }
                         }
                     ],

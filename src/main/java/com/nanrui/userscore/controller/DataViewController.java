@@ -33,7 +33,8 @@ public class DataViewController {
     @ResponseBody
     @PostMapping(value = "/dataView/dashboard")
     public List<DashboardPage_DataPackageBean> sourceDataView_dashBoard(@RequestBody Map<String,Object> params){
-        List<DashboardPage_DataPackageBean> jpaJavaBeanList = dataViewService.labelView_dashBoard();
+        String section = (String) params.get("section");
+        List<DashboardPage_DataPackageBean> jpaJavaBeanList = dataViewService.labelView_dashBoard(section);
         return jpaJavaBeanList;
     }
 

@@ -8,6 +8,7 @@ import com.nanrui.userscore.dao.LoanUserGiveMarkDao;
 import com.nanrui.userscore.dao.RuleDao;
 import com.nanrui.userscore.dao.SourceDataDao;
 import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
+import com.nanrui.userscore.entities.JpaJavaBean;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
 import com.nanrui.userscore.utils.PropertiesReadUtils;
 import com.nanrui.userscore.utils.SqlPackageing;
@@ -51,19 +52,16 @@ public class DataViewService {
      *[-Inf,220)','[220,283)','[283,345)','[345,408)','[408,470)','[470,532)','[532,595)','[595,657)','[657,720)','[720,Inf)
      * @return
      */
-    public List<DashboardPage_DataPackageBean> labelView_dashBoard() {
-        List<String> ruleSectionList = new ArrayList<>();
-        List<DashboardPage_DataPackageBean> beanFinallyList = new ArrayList<>();
-        String ruleSection = propertiesLoader.getProperty("ruleSection");
-        String[] split = ruleSection.split("@");
-        /**
-         * 获得页面查询的区间
-         */
-        for (int i = 0;i<split.length;i++){
-            ruleSectionList.add(split[i]);
-        }
-
+    public List<DashboardPage_DataPackageBean> labelView_dashBoard(String section) {
         SqlPackageing sqlPackageing = new SqlPackageing();
+        List<DashboardPage_DataPackageBean> beanFinallyList = new ArrayList<>();
+
+        String sqlSection = "SELECT MAX(sum_point),MIN(sum_point),AVG(sum_point) FROM source_data_give_mark";
+        Query querySection = entityManager.createQuery(sqlSection);
+        List<Object[]> sectionResultList = querySection.getResultList();
+        List<String> ruleSectionList = sqlPackageing.sectionPackageing(section,sectionResultList);
+
+
         /**
          * 要查询的字段
          */

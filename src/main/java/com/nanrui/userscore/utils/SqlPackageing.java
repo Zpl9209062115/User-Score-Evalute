@@ -1,13 +1,9 @@
 package com.nanrui.userscore.utils;
 
 import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
-import com.nanrui.userscore.entities.JpaJavaBean;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @ClassName SqlPackageing
@@ -208,4 +204,81 @@ public class SqlPackageing {
         return bean;
     }
 
+
+    public List<String> sectionPackageing(String section,List<Object[]> sectionResultList){
+        //SELECT MAX(sum_point),MIN(sum_point),AVG(sum_point) FROM source_data_give_mark
+        List<String> ruleSectionList = new ArrayList<>();
+        for (int i = 0; i < sectionResultList.size(); i++) {
+            /**
+             * 向上取整用Math.ceil(double a)
+             *
+             * 向下取整用Math.floor(double a)
+             */
+            Object[] objects = sectionResultList.get(i);
+            Double max = Double.parseDouble(objects[0].toString());
+            Double maxNum = Math.ceil(max);
+            Double min = Double.parseDouble(objects[1].toString());
+            Double minNum = Math.floor(min);
+
+            Double differenceValue = maxNum - minNum;
+
+            Double intervalValue=differenceValue/Double.parseDouble(section);
+            ruleSectionList = sectionStrDispose(section,maxNum, minNum, intervalValue);
+
+        }
+        return ruleSectionList;
+    }
+
+    public List<String> sectionStrDispose(String section,Double maxNum,Double minNum,Double intervalValue){
+        List<String> strSection = new ArrayList<>();
+        //[-Inf,220)@[220,283)@[283,345)@[345,408)@[408,470)@[470,532)@[532,595)@[595,657)@[657,720)@[720,Inf)
+        if (maxNum == 0){
+            return strSection;
+        } else if (maxNum == minNum){
+            String sectionStr1 = "[-Inf,"+maxNum+")";
+            String sectionStr2 = "["+maxNum+",Inf)";
+            strSection.add(sectionStr1);
+            strSection.add(sectionStr2);
+            return strSection;
+        } else {
+            Double left = 0.0;
+            Double mid = 0.0;
+            Double right = 0.0;
+            String sectionStr = "";
+            //累加的最小值
+            Integer count = Integer.valueOf(section) - 2;
+            for (int i = 0;i<=count;i++){
+                if (i == count){
+                    String sectionStrLeft = "[-Inf,"+Math.ceil(minNum)+")";
+                    String sectionStrRight = "["+Math.ceil(left)+",Inf)";
+                    strSection.add(0,sectionStrLeft);
+                    strSection.add(strSection.size(),sectionStrRight);
+                    break;
+                } else {
+                    if (i == 0){
+                        left = minNum;
+                        right = minNum + intervalValue;
+                        System.out.println(left);
+                        System.out.println(right);
+
+
+                        sectionStr = "["+Math.ceil(left) + "," + Math.ceil(right) + ")";
+                        strSection.add(sectionStr);
+                        left = right;
+                        right = right + intervalValue;
+                    } else {
+                        System.out.println(left);
+                        System.out.println(right);
+
+                        right = left + intervalValue;
+                        sectionStr = "["+Math.ceil(left) + "," + Math.ceil(right) + ")";
+                        strSection.add(sectionStr);
+                        left = right;
+                        right = right + intervalValue;
+                    }
+                }
+            }
+            return strSection;
+        }
+    }
 }
