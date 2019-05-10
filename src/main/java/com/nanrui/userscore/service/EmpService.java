@@ -1,14 +1,11 @@
 package com.nanrui.userscore.service;
 
-import com.nanrui.userscore.dao.LoanUserDao;
-import com.nanrui.userscore.dao.RuleDao;
-import com.nanrui.userscore.dao.SourceDataDao;
+import com.nanrui.userscore.dao.*;
 import com.nanrui.userscore.entities.LoanUser;
 import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.entities.SourceData;
-import com.nanrui.userscore.utils.GenerativeRuleUtils;
-import com.nanrui.userscore.utils.IntervalUtil;
-import com.nanrui.userscore.utils.ReadRegulationCsv;
+import com.nanrui.userscore.entities.SourceData_GiveMark;
+import com.nanrui.userscore.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
@@ -31,15 +28,15 @@ import java.util.Map;
 @Service
 public class EmpService {
 
-    List<RuleBean> listColon = new ArrayList<>();
 
-    List<RuleBean> listOther = new ArrayList<>();
 
     List<RuleBean> listAll = new ArrayList<>();
 
     Map<String,Map<String,String>> csvMap = new HashMap<>();
 
     List<RuleBean> ruleList = new ArrayList<>();
+
+    List<SourceData_GiveMark> listSourceDataGiveMark = new ArrayList<>();
 
     @Autowired
     LoanUserDao empDao;
@@ -50,39 +47,18 @@ public class EmpService {
     @Autowired
     SourceDataDao sourceDataDao;
 
+    @Autowired
+    SourceDataGiveMarkDao sourceDataGiveMarkDao;
+
     @PersistenceContext
     private EntityManager entityManager;
 
     public static IntervalUtil a = new IntervalUtil();
 
-    public List<String> getRuleVariable(){
-
-        return null;
-    }
-
     @CachePut(value = "ruleCache")
     public List<RuleBean> getRule(){
         ruleList = ruleDao.findAll();
         return ruleList;
-    }
-
-    /**
-     * 查询所有用户
-     * @return
-     */
-    public List<RuleBean> getAllLoanUser(){
-        List<RuleBean> ruleAll = getRule();
-        return ruleAll;
-    }
-
-    /**
-     * 用户与指定规则的对比
-     * @param user
-     * @return
-     */
-    public List<Map<String,Object>> JudgeScore(LoanUser user){
-        a.isInTheInterval(String.valueOf(user.getAge()),"");
-        return null;
     }
 
     /**
@@ -102,38 +78,59 @@ public class EmpService {
             csvMap = csv.readCSV(filePath);
 
             /**
-             * 根据文件生成规则:把生成的mapRuleCsv放入处理工具类
+             * 处理规则，生成规则对应的JavaBean
              */
-            GenerativeRuleUtils generativeRuleUtils = new GenerativeRuleUtils();
+            DataDisposeUtils dataDisposeUtils = new DataDisposeUtils();
+            Map<String, List<RuleBean>> stringListMap = dataDisposeUtils.generative_rule(csvMap);
 
             /**
-             * 处理带冒号和不带冒号的
-             *      剩下的判别在对应的里面进行
+             * 程序启动时存储
              */
-            for (Map.Entry<String, Map<String, String>> mapRule : csvMap.entrySet()){
-                if (("colonNotMap").equals(mapRule.getKey())){
-                    listOther = generativeRuleUtils.colonNotMapDispose(mapRule.getValue());
-                }
-            }
-
-            listAll.addAll(listColon);
-            listAll.addAll(listOther);
-
+            listAll.addAll(stringListMap.get("listColon"));
+            listAll.addAll(stringListMap.get("listOther"));
             if (0 != listAll.size()){
                 ruleDao.deleteAll();
                 ruleDao.save(listAll);
             }
 
-
-
             /**
              * 2、读取原始数据
              */
             List<SourceData> sourceDataList = csv.readSourceData(filePathSourceData);
+
+            /**
+             * 程序启动时存储
+             */
             if (null != sourceDataList){
                 sourceDataDao.deleteAll();
                 sourceDataDao.save(sourceDataList);
             }
+
+            /**
+             * 3、对于原始数据进行评分-打分
+             * 原始数据     sourceDataList
+             * 规则           listAll
+             */
+
+            /**
+             * 规则数据准备
+             */
+            Map<String,List<Object[]>> ruleMap = new HashMap<>();
+            List<String> list = ruleDao.selectRuleLabel();
+            for (int i = 0;i<list.size();i++){
+                String variable = list.get(i);
+                List<Object[]> objects = ruleDao.selectRuleLabel_bin(variable);
+                ruleMap.put(variable,objects);
+            }
+
+            /**
+             * 对于现有数据进行评分，并生成对应的JavaBean，存储
+             */
+            DataSourceGiveMarkUtils dataSourceGiveMarkUtils = new DataSourceGiveMarkUtils();
+            listSourceDataGiveMark = dataSourceGiveMarkUtils.giveMarkToDataSourceUtil(ruleMap,sourceDataList);
+            sourceDataGiveMarkDao.deleteAll();
+            sourceDataGiveMarkDao.save(listSourceDataGiveMark);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

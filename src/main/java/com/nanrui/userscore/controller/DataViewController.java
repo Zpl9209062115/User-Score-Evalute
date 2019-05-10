@@ -1,5 +1,6 @@
 package com.nanrui.userscore.controller;
 
+import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
 import com.nanrui.userscore.entities.JpaJavaBean;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
 import com.nanrui.userscore.entities.SourceData;
@@ -31,9 +32,8 @@ public class DataViewController {
 
     @ResponseBody
     @PostMapping(value = "/dataView/dashboard")
-    public List<SourceData> sourceDataView_dashBoard(@RequestBody Map<String,Object> params){
-        List<SourceData> jpaJavaBeanList = dataViewService.labelView_dashBoard();
-        JSONArray jsonArray = JSONArray.fromObject(jpaJavaBeanList);
+    public List<DashboardPage_DataPackageBean> sourceDataView_dashBoard(@RequestBody Map<String,Object> params){
+        List<DashboardPage_DataPackageBean> jpaJavaBeanList = dataViewService.labelView_dashBoard();
         return jpaJavaBeanList;
     }
 

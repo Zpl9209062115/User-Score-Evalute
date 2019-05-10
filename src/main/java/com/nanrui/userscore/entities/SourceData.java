@@ -118,13 +118,27 @@ public class SourceData {
     /**
      * 原始数据是否经过处理的标识
      */
-    @Column(name = "identifying")
-    private String identifying;
+    @Column(name = "section")
+    private String section;
+
+    /**
+     * 单位
+     */
+    @Column(name = "unit")
+    private String unit;
+
+    /**
+     * 原始数据是否经过处理的标识
+     *      0       未处理
+     *      1       处理过
+     */
+    @Column(name = "dispose_sign")
+    private String dispose_sign;
 
     public SourceData() {
     }
 
-    public SourceData(String age, String personal_status_and_sex, String duration_month, String installment_income, String employment_since, String housing, String installment_plans, String savings_account_and_bonds, String credit_history, String credit_amount, String status_sxisting_checking_account, String purpose, String other_debtors_or_guarantors, String property, String creditability, String identifying) {
+    public SourceData(String age, String personal_status_and_sex, String duration_month, String installment_income, String employment_since, String housing, String installment_plans, String savings_account_and_bonds, String credit_history, String credit_amount, String status_sxisting_checking_account, String purpose, String other_debtors_or_guarantors, String property, String creditability, String section, String unit, String dispose_sign) {
         this.age = age;
         this.personal_status_and_sex = personal_status_and_sex;
         this.duration_month = duration_month;
@@ -140,41 +154,9 @@ public class SourceData {
         this.other_debtors_or_guarantors = other_debtors_or_guarantors;
         this.property = property;
         this.creditability = creditability;
-        this.identifying = identifying;
-    }
-
-    public SourceData(String age, String personal_status_and_sex, String duration_month, String installment_income, String employment_since, String housing, String installment_plans, String savings_account_and_bonds, String credit_history, String credit_amount, String status_sxisting_checking_account, String purpose, String other_debtors_or_guarantors) {
-        this.age = age;
-        this.personal_status_and_sex = personal_status_and_sex;
-        this.duration_month = duration_month;
-        this.installment_income = installment_income;
-        this.employment_since = employment_since;
-        this.housing = housing;
-        this.installment_plans = installment_plans;
-        this.savings_account_and_bonds = savings_account_and_bonds;
-        this.credit_history = credit_history;
-        this.credit_amount = credit_amount;
-        this.status_sxisting_checking_account = status_sxisting_checking_account;
-        this.purpose = purpose;
-        this.other_debtors_or_guarantors = other_debtors_or_guarantors;
-    }
-
-    public SourceData(String age, String personal_status_and_sex, String duration_month, String installment_income, String employment_since, String housing, String installment_plans, String savings_account_and_bonds, String credit_history, String credit_amount, String status_sxisting_checking_account, String purpose, String other_debtors_or_guarantors, String property, String creditability) {
-        this.age = age;
-        this.personal_status_and_sex = personal_status_and_sex;
-        this.duration_month = duration_month;
-        this.installment_income = installment_income;
-        this.employment_since = employment_since;
-        this.housing = housing;
-        this.installment_plans = installment_plans;
-        this.savings_account_and_bonds = savings_account_and_bonds;
-        this.credit_history = credit_history;
-        this.credit_amount = credit_amount;
-        this.status_sxisting_checking_account = status_sxisting_checking_account;
-        this.purpose = purpose;
-        this.other_debtors_or_guarantors = other_debtors_or_guarantors;
-        this.property = property;
-        this.creditability = creditability;
+        this.section = section;
+        this.unit = unit;
+        this.dispose_sign = dispose_sign;
     }
 
     public String getLoanUser_id() {
@@ -305,11 +287,27 @@ public class SourceData {
         this.creditability = creditability;
     }
 
-    public String getIdentifying() {
-        return identifying;
+    public String getSection() {
+        return section;
     }
 
-    public void setIdentifying(String identifying) {
-        this.identifying = identifying;
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getDispose_sign() {
+        return dispose_sign;
+    }
+
+    public void setDispose_sign(String dispose_sign) {
+        this.dispose_sign = dispose_sign;
     }
 }

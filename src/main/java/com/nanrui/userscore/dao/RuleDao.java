@@ -15,15 +15,12 @@ import java.util.List;
  **/
 public interface RuleDao extends JpaRepository<RuleBean,String> {
 
-    @Query(value = "SELECT DISTINCT variable,bin FROM rule_wide_table WHERE variable = ?1")
-    public List<String> selectRuleLabelByAge(String age);
-
     @Query(value = "SELECT DISTINCT bin FROM rule_wide_table WHERE variable = ?1")
     public List<String> selectRuleLabelByTag(String tag);
 
     @Query(value = "SELECT DISTINCT variable FROM rule_wide_table")
     public List<String> selectRuleLabel();
 
-    @Query(value = "SELECT DISTINCT bin,section_type FROM rule_wide_table where variable = ?1")
-    public List<Object[]> selectRuleLabel_age(String ageLabel);
+    @Query(value = "SELECT DISTINCT t.bin,t.points,t.variable_secondLabel FROM rule_wide_table t where t.variable LIKE ?1")
+    public List<Object[]> selectRuleLabel_bin(String ageLabel);
 }

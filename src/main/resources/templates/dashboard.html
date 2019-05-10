@@ -131,7 +131,35 @@
                     '性别'
                 ];
 
-                var label = [];
+                //违约用户数据集合
+                var keepTheUser_data = [];
+                //守约用户集合
+                var defaultUser_data = [];
+                //比值集合
+                var specificValue = [];
+
+                alert(result);
+                for (var i = 0;i<result.length;i++){
+                    var  bean = result[i];
+                    if (bean.creditability == "0"){
+                        defaultUser_data.push(bean.count);
+                    } else{
+                        keepTheUser_data.push(bean.count);
+                    }
+                }
+                for (var j = 0;j<10;j++){
+                    var sum = keepTheUser_data[j]+defaultUser_data[j];
+                    var specific = keepTheUser_data[j]/sum;
+                    debugger
+                    if (isNaN(specific)){
+                        specific = 0;
+                    }else {
+                        specific == specific.toFixed(specific);
+                    }
+                    alert(specific);
+                    specificValue.push(specific);
+                }
+
                 var dom = document.getElementById("container");
                 var myChart = echarts.init(dom);
                 var app = {};
@@ -225,19 +253,22 @@
                         {
                             name:'违约用户',
                             type:'bar',
-                            data:[30, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0]
+                            //data:[30, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0]
+                            data:defaultUser_data
                         },
                         {
                             name:'守约用户',
                             type:'bar',
                             yAxisIndex: 1,
-                            data:[20, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8]
+                            //data:[20, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8]
+                            data:keepTheUser_data
                         },
                         {
                             name:'违约用户占比',
                             type:'line',
                             yAxisIndex: 2,
-                            data:[0.2, 0.4, 0.3, 0.35, 0.26, 0.37, 0.53, 0.36, 0.33, 0.66]
+                            //data:[0.2, 0.4, 0.3, 0.35, 0.26, 0.37, 0.53, 0.36, 0.33, 0.66]
+                            data:specificValue
                         }
                     ]
                 };

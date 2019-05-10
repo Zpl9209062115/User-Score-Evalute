@@ -34,6 +34,18 @@ public class ReadRegulationCsv {
     String points = "";
 
     /**
+     * 1、保存从文件中读取的数据中包含冒号的数据。
+     * 2、根据对现有规则的分析，包含冒号的数据是
+     *          female : divorced/separated/married
+     * 保存到colonMap中进行处理，处理成
+     *          female : divorced
+     *          female :separated
+     *          female :married
+     * 3、存入数据库
+     */
+    Map<String,String> colonMap = new HashMap<>();
+
+    /**
      * 1、保存从文件中读取的数据中包含特殊字符的数据。
      * 2、根据对现有规则的分析，包含特殊字符('%,%' , '/')的数据是
      *          500 <= ... < 1000 DM%,%... >= 1000 DM%,%unknown/ no savings account
@@ -97,9 +109,18 @@ public class ReadRegulationCsv {
                 value = points.trim();
 
 
-                colonNotMap.put(key,value);
+                if (null != bin){
+                    if (bin.contains(":")){
+                        colonMap.put(key,value);
+                    } else {
+                        colonNotMap.put(key,value);
+                    }
+                }
             }
 
+            if (0 != colonMap.size()){
+                mapCsv.put("colonMap",colonMap);
+            }
             if (0 != colonNotMap.size()){
                 mapCsv.put("colonNotMap",colonNotMap);
             }
@@ -142,26 +163,59 @@ public class ReadRegulationCsv {
     }
 
     public SourceData readSourceData_javaBeanDispose(CsvReader reader) throws IOException {
+        SourceData sourceDataBean = new SourceData();
+
         String statusSxistingCheckingAccount = stringBooleanNumDispose(reader.get("status.of.existing.checking.account").trim());
+        sourceDataBean.setStatus_sxisting_checking_account(statusSxistingCheckingAccount);
+
         String durationMonth = stringBooleanNumDispose(reader.get("duration.in.month").trim());
+        sourceDataBean.setDuration_month(durationMonth);
+
         String creditHistory = stringBooleanNumDispose(reader.get("credit.history").trim());
+        sourceDataBean.setCredit_history(creditHistory);
+
         String purpose = stringBooleanNumDispose(reader.get("purpose").trim());
+        sourceDataBean.setPurpose(purpose);
+
         String creditAmount = stringBooleanNumDispose(reader.get("credit.amount"));
+        sourceDataBean.setCredit_amount(creditAmount);
+
         String savingsAccountAndBonds = stringBooleanNumDispose(reader.get("savings.account.and.bonds"));
+        sourceDataBean.setSavings_account_and_bonds(savingsAccountAndBonds);
+
         String employmentSince = stringBooleanNumDispose(reader.get("present.employment.since"));
+        sourceDataBean.setEmployment_since(employmentSince);
+
         String installmentIncome = stringBooleanNumDispose(reader.get("installment.rate.in.percentage.of.disposable.income"));
+        sourceDataBean.setInstallment_income(installmentIncome);
+
         String personalStatusAndSex = stringBooleanNumDispose(reader.get("personal.status.and.sex"));
+        sourceDataBean.setPersonal_status_and_sex(personalStatusAndSex);
+
         String otherDebtorsOrGuarantors = stringBooleanNumDispose(reader.get("other.debtors.or.guarantors"));
+        sourceDataBean.setOther_debtors_or_guarantors(otherDebtorsOrGuarantors);
+
         String property = stringBooleanNumDispose(reader.get("property"));
+        sourceDataBean.setProperty(property);
+
         String age = stringBooleanNumDispose(reader.get("age.in.years"));
+        sourceDataBean.setAge(age);
+
         String installmentPlans = stringBooleanNumDispose(reader.get("other.installment.plans"));
+        sourceDataBean.setInstallment_plans(installmentPlans);
+
         String housing = stringBooleanNumDispose(reader.get("housing"));
+        sourceDataBean.setHousing(housing);
+
         String creditability = stringBooleanNumDispose(reader.get("creditability"));
-        SourceData sourceDataBean = new SourceData(age,personalStatusAndSex,durationMonth,installmentIncome,employmentSince,housing,installmentPlans,savingsAccountAndBonds,creditHistory,creditAmount,statusSxistingCheckingAccount,purpose,otherDebtorsOrGuarantors,property,creditability);
+        sourceDataBean.setCreditability(creditability);
+
+        sourceDataBean.setDispose_sign("0");
         return sourceDataBean;
     }
 
     public String stringBooleanNumDispose(String string){
+        Map<String,String> mapStr = new HashMap<>();
         boolean symbolBooleanResult = string.contains("<") || string.contains("<=") || string.contains(">") || string.contains(">=");
         boolean numBooleanResult = p.matcher(string).matches();
         if (symbolBooleanResult && numBooleanResult){

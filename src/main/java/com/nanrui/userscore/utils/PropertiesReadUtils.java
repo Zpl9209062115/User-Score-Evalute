@@ -137,25 +137,8 @@ public class PropertiesReadUtils {
     }
 
     public static void main(String[] args) {
-        PropertiesReadUtils propertiesLoader = new PropertiesReadUtils("MailProperties.properties");
-
-        System.out.println(propertiesLoader.getProperty("age.in.years"));
-        System.out.println(propertiesLoader.getProperty("credit.history"));
-        System.out.println(propertiesLoader.getProperty("duration.in.month"));
-        System.out.println(propertiesLoader.getProperty("present.employment.since"));
-        System.out.println(propertiesLoader.getProperty("housing"));
-        System.out.println(propertiesLoader.getProperty("savings.account.and.bonds"));
-        System.out.println(propertiesLoader.getProperty("other.installment.plans"));
-        System.out.println(propertiesLoader.getProperty("status.of.existing.checking.account"));
-        System.out.println(propertiesLoader.getProperty("installment.rate.in.percentage.of.disposable.income"));
-        System.out.println(propertiesLoader.getProperty("credit.amount"));
-        System.out.println(propertiesLoader.getProperty("purpose"));
-        System.out.println(propertiesLoader.getProperty("other.debtors.or.guarantors"));
-        System.out.println(propertiesLoader.getProperty("personal.status.and.sex.female"));
-        System.out.println(propertiesLoader.getProperty("personal.status.and.sex"));
-        System.out.println(propertiesLoader.getProperty("personal.status.and.sex.male"));
-
-
+        PropertiesReadUtils propertiesLoader = new PropertiesReadUtils("rule.properties");
+        System.out.println(propertiesLoader.getProperty("ruleSection"));
     }
 
 }

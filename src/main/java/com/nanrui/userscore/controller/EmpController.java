@@ -30,20 +30,6 @@ public class EmpController {
     RuleService ruleService;
 
     /**
-     * 查询所有用户，返回列表页面
-     * @return
-     */
-    /*@GetMapping("/emps/getAllEmp")
-    public String getEmpMessage(Model model){
-        List<RuleBean> allLoanUser = empService.getAllLoanUser();
-        *//**
-         * 放到请求域中
-         *//*
-        model.addAttribute("emps",allLoanUser);
-        return "emp/list";
-    }*/
-
-    /**
      * 来到用户预测页面
      * @return
      */
@@ -56,16 +42,5 @@ public class EmpController {
         model.addAttribute("ruleLabelByAge",ruleLabelByAge);
         return "emp/add";
     }
-
-    /**
-     * 查询规则，根据用户信息，对用户进行评分并获取用户评分
-     * @return
-     */
-    /*@PostMapping("/emps/getPredictionMessage")
-    public String EmpPrediction(LoanUser user){
-        System.out.println("预测用户信息" + user);
-        empService.JudgeScore(user);
-        return "emp/score";
-    }*/
 
 }
