@@ -1,14 +1,20 @@
 package com.nanrui.userscore.controller;
 
+import com.csvreader.CsvReader;
 import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
 import com.nanrui.userscore.service.DataViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.Result;
+import java.io.*;
+import java.nio.Buffer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +47,23 @@ public class DataViewController {
         String loanUser_id_giveMark = (String) params.get("loanUser_id_giveMark");
         LoanUser_GiveMark loanUser_giveMark = dataViewService.labelView(loanUser_id_giveMark);
         return loanUser_giveMark;
+    }
+
+    @RequestMapping(value = "/dataView/upload", method = RequestMethod.POST)
+    @ResponseBody
+    private Boolean importExcel(@RequestParam(value = "excelFile", required = false) MultipartFile file) {
+        CsvReader reader = null;
+        boolean result = false;
+        try{
+            if (!file.isEmpty()){
+                reader = new CsvReader(file.getInputStream(), Charset.forName("GBK"));
+                result = dataViewService.batchGiveMark(reader);
+            }
+            return result;
+        } catch (Exception e){
+            e.printStackTrace();
+            return result;
+        }
     }
 
 }

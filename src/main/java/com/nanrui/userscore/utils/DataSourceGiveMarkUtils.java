@@ -21,7 +21,6 @@ public class DataSourceGiveMarkUtils {
     public List<SourceData_GiveMark> giveMarkToDataSourceUtil(Map<String,List<Object[]>> ruleMap, List<SourceData> sourceDataList) {
 
         List<SourceData_GiveMark> beanListFinally = new ArrayList<>();
-
         for (int i = 0;i<sourceDataList.size();i++){
             SourceData sourceData = sourceDataList.get(i);
             List<SourceData_GiveMark> beanList = disposeGiveMarkUtil(ruleMap,sourceData);

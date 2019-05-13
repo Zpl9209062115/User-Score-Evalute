@@ -34,13 +34,6 @@ public class RuleController {
     @Autowired
     RuleService ruleService;
 
-    /*@GetMapping("/emps/getAllEmp")
-    public String getRuleLable(Model model){
-        List<RuleBean> ruleLabel = ruleService.findRuleLabel();
-        model.addAttribute("emps",ruleLabel);
-        return "emp/list";
-    }*/
-
     @PostMapping("/rule/usersPredict")
     public String getRulelabel(Model model){
         Map<String, List<String>> ruleLabelByAge = ruleService.findAll();

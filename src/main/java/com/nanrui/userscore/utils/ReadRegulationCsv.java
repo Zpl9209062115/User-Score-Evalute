@@ -135,6 +135,28 @@ public class ReadRegulationCsv {
         return mapCsv;
     }
 
+    public List<SourceData> readSourceData(CsvReader reader) throws Exception {
+        List<SourceData> sourceDataList = new ArrayList<>();
+        try {
+            // 读取表头
+            reader.readHeaders();
+            //String[] headArray = reader.getHeaders();//获取标题
+            // 逐条读取记录，直至读完
+            int columnCount = reader.getColumnCount();
+            System.out.println(columnCount);
+            long currentRecord = reader.getCurrentRecord();
+            System.out.println(currentRecord);
+            while (reader.readRecord()) {
+                SourceData sourceData = readSourceData_javaBeanDispose(reader);
+                sourceDataList.add(sourceData);
+            }
+            return sourceDataList;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<SourceData> readSourceData(String filePathSourceData) throws Exception {
         CsvReader reader = null;
         List<SourceData> sourceDataList = new ArrayList<>();

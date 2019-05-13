@@ -11,9 +11,11 @@
     <title>Dashboard Template for Bootstrap</title>
     <!-- Bootstrap core CSS -->
     <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <!-- bootstrap fileinput 插件引入 -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/fileinput.min.css}" rel="stylesheet">
+
     <style type="text/css">
         /* Chart.js */
 
@@ -74,18 +76,21 @@
                                 <div class="col-md-6">
                                     <label for="age">年龄</label>
                                     <input class="form-control" id="age" placeholder="1-100" th:name="age" required>
-                                </div><br>
+                                </div>
+                                <br>
 
-                                <div class="col-md-6"  style="margin-top:20px;">
+                                <div class="col-md-6" style="margin-top:20px;">
                                     <label for="durationMonth">社保缴纳时间</label>
-                                    <input class="form-control" id="durationMonth" placeholder="20" th:name="durationMonth"
+                                    <input class="form-control" id="durationMonth" placeholder="20"
+                                           th:name="durationMonth"
                                            required>
                                 </div>
                                 <div class="col-md-6" style="margin-top:20px;">
                                     <label for="installmentIncome">分期付款率占可支配收入的百分比</label>
                                     <input class="form-control" id="installmentIncome" placeholder="3"
                                            th:name="installmentIncome" required>
-                                </div><br>
+                                </div>
+                                <br>
 
                                 <div class="col-md-6" style="margin-top:20px;">
                                     <label for="creditAmount">欠款金额</label>
@@ -95,10 +100,8 @@
                             </div>
 
 
-
-
                             <div class="row">
-                                <div class="col-md-4"  style="margin-top:20px;">
+                                <div class="col-md-4" style="margin-top:20px;">
                                     <label>用途</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="purpose" class="form-control">
@@ -110,7 +113,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4"  style="margin-top:20px;">
+                                <div class="col-md-4" style="margin-top:20px;">
                                     <label>从业经历</label>
                                     <div style="width:100%;margin-left:auto;margin-right:auto;">
                                         <select id="personalStatusAndSexSelect" name="employmentSince"
@@ -236,29 +239,36 @@
                                     th:onclick="ajaxSubmit">Continue to checkout
                             </button>
                         </form>
-                        <br/>
-                        <form>
-                            <div class="btn btn-primary btn-lg custom-file">
-                                <input type="file" class="custom-file-input" id="customFileLangHTML">
-                                <label class="custom-file-label" for="customFileLangHTML" data-browse="批量预测">Voeg
-                                    je document toe</label>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
+
+            <!--<div>
+                <form enctype="multipart/form-data" th:id="formFileInput" th:name="formFileInput">
+                    <div class="file-loading">
+                        <input id="testfile" name="input-b7[]" multiple type="file" class="file"
+                               data-allowed-file-extensions='["csv", "txt"]'>
+                    </div>
+                </form>
+            </div>-->
+
+            <div class="modal-body">
+                <form id="importFile" name="importFile" class="form-horizontal" method="post"
+                      enctype="multipart/form-data">
+                    <div class="box-body">
+                        <div>
+
+                            <label class="control-label">请选择要导入的Excel文件：</label>
+                            <input id="excelFile" name="excelFile" class="file-loading" type="file" multiple
+                                   accept=".xls,.xlsx,.csv"
+                            > <br>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
         </main>
     </div>
-
-
-    <!--<footer class="my-5 pt-5 text-muted text-center text-small" >
-        <p class="mb-1">&copy; 2017-2019 Company Name</p>
-        <ul class="list-inline">
-            <li class="list-inline-item"><a href="#">Privacy</a></li>
-            <li class="list-inline-item"><a href="#">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Support</a></li>
-        </ul>
-    </footer>-->
 </div>
 </main>
 
@@ -268,23 +278,84 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<script th:src="@{/asserts/js/fileinput.js}"></script>
 <script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js"
         th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
 <script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>
 <script type="text/javascript" src="asserts/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
-
 <!-- Icons -->
 <script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
 
-<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/fileinput.js}"></script>
-<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/zh.js}"></script>
-<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/css/fileinput.min.css}"></script>
-<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/css/fileinput-rtl.min.css}"></script>
+<!-- 批量导入 插件引入 -->
+<script type="text/javascript" th:src="@{/asserts/js/locales/zh.js}"></script>
+<script type="text/javascript" th:src="@{/asserts/js/fileinput.min.js}"></script>
+
+<script type="text/javascript">
+
+    var curPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var pos = curPath.indexOf(pathName);
+    var localhostPath = curPath.substring(0, pos);
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    var params = {
+        "name": "wangdneggao"
+    }
+    var json = JSON.stringify(params);
+
+    initUpload("excelFile", localhostPath + projectName + "/dataView/upload");
+
+    function initUpload(ctrlName, uploadUrl) {
+        var control = $('#' + ctrlName);
+        control.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: uploadUrl, //上传的地址
+            uploadAsync: true, //默认异步上传
+            showCaption: true,//是否显示标题
+            showUpload: true, //是否显示上传按钮
+            browseClass: "btn btn-primary", //按钮样式
+            allowedFileExtensions: ["xls", "xlsx", "csv"], //接收的文件后缀
+            maxFileCount: 10,//最大上传文件数限制
+            previewFileIcon: '<i class="glyphicon glyphicon-file"></i>',
+            showPreview: true, //是否显示预览
+            previewFileIconSettings: {
+                'docx': '<i ass="fa fa-file-word-o text-primary"></i>',
+                'xlsx': '<i class="fa fa-file-excel-o text-success"></i>',
+                'xls': '<i class="fa fa-file-excel-o text-success"></i>',
+                'pptx': '<i class="fa fa-file-powerpoint-o text-danger"></i>',
+                'jpg': '<i class="fa fa-file-photo-o text-warning"></i>',
+                'pdf': '<i class="fa fa-file-archive-o text-muted"></i>',
+                'zip': '<i class="fa fa-file-archive-o text-muted"></i>',
+            },
+            uploadExtraData: function () {
+                var extraValue = "test";
+                return {"excelType": extraValue};
+            }
+        });
+    }
+
+    $("#excelFile").on("fileuploaded", function (event, data, previewId, index) {
+        console.log(data);
+        if (data.response == true) {
+            alert(data.files[index].name + "上传成功!");
+            //关闭
+            $(".close").click();
+            window.location.href = localhostPath + projectName + "/main.html";
+        }
+        else {
+            alert(data.files[index].name + "上传失败!" + data.response.message);
+            //重置
+            $("#excelFile").fileinput("clear");
+            $("#excelFile").fileinput("reset");
+            $('#excelFile').fileinput('refresh');
+            $('#excelFile').fileinput('enable');
+        }
+    });
+</script>
+
 <script>
     feather.replace()
 </script>
-
 </body>
 
 </html>

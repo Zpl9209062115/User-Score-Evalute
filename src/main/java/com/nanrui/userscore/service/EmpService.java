@@ -52,6 +52,9 @@ public class EmpService {
     @PersistenceContext
     private EntityManager entityManager;
 
+
+    PropertiesReadUtils propertiesLoader = new PropertiesReadUtils("rule.properties");
+
     public static IntervalUtil a = new IntervalUtil();
 
     @CachePut(value = "ruleCache")
@@ -66,8 +69,8 @@ public class EmpService {
     @PostConstruct
     public void Rule(){
         System.out.println("启动时加载-------------");
-        String filePath = "D:/aa/3.csv";
-        String filePathSourceData = "D:/aa/train1.csv";
+        String filePath = propertiesLoader.getProperty("filePath");
+        String filePathSourceData = propertiesLoader.getProperty("filePathSourceData");
         System.out.println("=========服务启动执行===========");
         try {
             ReadRegulationCsv csv = new ReadRegulationCsv();
