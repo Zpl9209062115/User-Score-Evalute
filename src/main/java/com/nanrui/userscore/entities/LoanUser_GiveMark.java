@@ -1,10 +1,6 @@
 package com.nanrui.userscore.entities;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.omg.CORBA.INTERNAL;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-
 import javax.persistence.*;
 
 /**

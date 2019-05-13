@@ -2,6 +2,7 @@ package com.nanrui.userscore;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -36,12 +36,12 @@ public class UserScoreTest {
     @Test
     public void contextLoads() {
 
-        for (int i = 0;i<10;i++){
+        /*for (int i = 0;i<10;i++){
             if (i==2){
                 break;
             }
             System.out.println(i);
-        }
+        }*/
 
         /*String utils = "";*/
 

@@ -9,7 +9,6 @@ import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.utils.RuleSectionJudgeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

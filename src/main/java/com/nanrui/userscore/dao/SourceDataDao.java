@@ -16,7 +16,4 @@ import java.util.List;
  * @Version 1.0
  **/
 public interface SourceDataDao extends JpaRepository<SourceData,String> {
-
-    @Query(value = "select age,count(s) as count from source_data s group by age")
-    public List<Object[]> selectSourceDataCount();
 }

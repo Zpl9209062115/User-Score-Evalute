@@ -1,10 +1,7 @@
 package com.nanrui.userscore.dao;
 
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * @ClassName LoanUser_GiveMarkDao

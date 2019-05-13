@@ -2,7 +2,6 @@ package com.nanrui.userscore.utils;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.entities.SourceData;
 
 import java.io.FileOutputStream;

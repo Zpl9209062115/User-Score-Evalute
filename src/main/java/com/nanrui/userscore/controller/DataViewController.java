@@ -1,11 +1,8 @@
 package com.nanrui.userscore.controller;
 
 import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
-import com.nanrui.userscore.entities.JpaJavaBean;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
-import com.nanrui.userscore.entities.SourceData;
 import com.nanrui.userscore.service.DataViewService;
-import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;

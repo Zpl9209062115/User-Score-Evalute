@@ -1,7 +1,6 @@
 package com.nanrui.userscore.service;
 
 import com.nanrui.userscore.dao.*;
-import com.nanrui.userscore.entities.LoanUser;
 import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.entities.SourceData;
 import com.nanrui.userscore.entities.SourceData_GiveMark;

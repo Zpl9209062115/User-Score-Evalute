@@ -8,7 +8,6 @@ import com.nanrui.userscore.dao.LoanUserGiveMarkDao;
 import com.nanrui.userscore.dao.RuleDao;
 import com.nanrui.userscore.dao.SourceDataDao;
 import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
-import com.nanrui.userscore.entities.JpaJavaBean;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
 import com.nanrui.userscore.utils.PropertiesReadUtils;
 import com.nanrui.userscore.utils.SqlPackageing;

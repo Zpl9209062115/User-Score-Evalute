@@ -1,9 +1,4 @@
 package com.nanrui.userscore.properties;
-
-
-import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
