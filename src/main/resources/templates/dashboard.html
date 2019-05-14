@@ -98,9 +98,6 @@
 <script type="text/javascript" src="asserts/js/popper.min.js" th:href="@{/webjars/popper.js/1.14.3/popper.js}"></script>
 <script type="text/javascript" th:src="@{/asserts/js/echarts.min.js}" th:charset="utf-8"></script>
 
-<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
-
-<script type="text/javascript" src="DataTables/datatables.min.js"></script>
 <script>
     feather.replace()
 </script>
@@ -126,13 +123,6 @@
             type: 'post',
             contentType: 'application/json;charset=utf-8',
             success: function (result) {
-                var pList = [];
-                var label = [
-                    '年龄','信用历史','持续时间(社保缴纳时间)','就业历史情况(从业经历)','住房情况','储蓄存款及债券',
-                    '其他分期付款计划','现有支票帐户的状况','分期付款率占可支配收入的百分比','欠款金额','用途','其他债务人或保证人',
-                    '性别'
-                ];
-
                 //违约用户数据集合
                 var keepTheUser_data = [];
                 //守约用户集合

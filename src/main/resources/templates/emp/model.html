@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="commons/bar::#sidebar(activeUri='empRatings')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div id="container" style="width: 1200px;height:600px;"></div>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.4.0/jquery.js}"></script>
+<!--<script type="text/javascript" th:src="@{/webjars/popper.js/1.14.3/popper.js}"></script>-->
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" th:src="@{/asserts/js/feather.min.js}"></script>
+<script type="text/javascript" th:src="@{/asserts/js/echarts.min.js}" th:charset="utf-8"></script>
+<script>
+    feather.replace()
+</script>
+<script th:inline="javascript">
+    var curPath = window.document.location.href;
+    var pathName = window.document.location.pathname;
+    var pos = curPath.indexOf(pathName);
+    var localhostPath = curPath.substring(0, pos);
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    var params = {
+        "section": "10"
+    }
+    var json = JSON.stringify(params);
+
+    window.onload = function () {
+        $.ajax({
+            url: localhostPath + projectName + "/dataView/modelOptimize",
+            dataType: "json",
+            data: json,
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
+            success: function (result) {
+                //违约用户数据集合
+                var keepTheUser_data = [];
+                //守约用户集合
+                var defaultUser_data = [];
+                //比值集合
+                var specificValue = [];
+                //横坐标
+                var xLabel = [];
+                for (var i = 0;i<result.length;i++){
+                    var  bean = result[i];
+                    if (bean.creditability == "0"){
+                        defaultUser_data.push(bean.count);
+                    } else{
+                        keepTheUser_data.push(bean.count);
+                        xLabel.push(bean.section);
+                    }
+                }
+                for (var j = 0;j<result.length/2;j++){
+                    var sum = keepTheUser_data[j]+defaultUser_data[j];
+                    var specific = keepTheUser_data[j]/sum;
+                    if (isNaN(specific)){
+                        specific = 0;
+                    }else {
+                        specific == specific.toFixed(specific);
+                    }
+                    specificValue.push(specific);
+                }
+
+                var dom = document.getElementById("container");
+                var myChart = echarts.init(dom);
+                var app = {};
+                option = null;
+                app.title = '嵌套环形图';
+
+                option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data:['直达','营销广告','搜索引擎','邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他']
+                    },
+                    series: [
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            selectedMode: 'single',
+                            radius: [0, '30%'],
+
+                            label: {
+                                normal: {
+                                    position: 'inner'
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data:[
+                                {value:335, name:'直达', selected:true},
+                                {value:679, name:'营销广告'},
+                                {value:1548, name:'搜索引擎'}
+                            ]
+                        },
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            radius: ['40%', '55%'],
+                            label: {
+                                normal: {
+                                    formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                    backgroundColor: '#eee',
+                                    borderColor: '#aaa',
+                                    borderWidth: 1,
+                                    borderRadius: 4,
+                                    // shadowBlur:3,
+                                    // shadowOffsetX: 2,
+                                    // shadowOffsetY: 2,
+                                    // shadowColor: '#999',
+                                    // padding: [0, 7],
+                                    rich: {
+                                        a: {
+                                            color: '#999',
+                                            lineHeight: 22,
+                                            align: 'center'
+                                        },
+                                        // abg: {
+                                        //     backgroundColor: '#333',
+                                        //     width: '100%',
+                                        //     align: 'right',
+                                        //     height: 22,
+                                        //     borderRadius: [4, 4, 0, 0]
+                                        // },
+                                        hr: {
+                                            borderColor: '#aaa',
+                                            width: '100%',
+                                            borderWidth: 0.5,
+                                            height: 0
+                                        },
+                                        b: {
+                                            fontSize: 16,
+                                            lineHeight: 33
+                                        },
+                                        per: {
+                                            color: '#eee',
+                                            backgroundColor: '#334455',
+                                            padding: [2, 4],
+                                            borderRadius: 2
+                                        }
+                                    }
+                                }
+                            },
+                            data:[
+                                {value:335, name:'直达'},
+                                {value:310, name:'邮件营销'},
+                                {value:234, name:'联盟广告'},
+                                {value:135, name:'视频广告'},
+                                {value:1048, name:'百度'},
+                                {value:251, name:'谷歌'},
+                                {value:147, name:'必应'},
+                                {value:102, name:'其他'}
+                            ]
+                        }
+                    ]
+                };;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+            error: function (data) {
+                alert("error");
+                console.log("获取用户所有功能失败");
+            }
+        });
+    }
+</script>
+<script type="text/javascript"></script>
+</body>
+</html>

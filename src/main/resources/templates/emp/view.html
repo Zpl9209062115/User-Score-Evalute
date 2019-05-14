@@ -125,7 +125,34 @@
                     xAxis: {
                         type : 'category',
                         splitLine: {show:false},
-                        data : ['总分','基础分','年龄','信用历史','社保缴纳时间','就业历史情况(从业经历)','住房情况','储蓄存款及债券','其他分期付款计划','现有支票帐户的状况','分期付款率占可支配收入的百分比', '欠款金额','用途','其他债务人或保证人','性别']
+                        data : ['总分','基础分','年龄','信用历史','社保缴纳时间','就业历史情况(从业经历)','住房情况','储蓄存款及债券','其他分期付款计划','现有支票帐户的状况','分期付款率占可支配收入的百分比', '欠款金额','用途','其他债务人或保证人','性别'],
+                        axisLabel : {
+                            interval : 0,
+                            formatter : function(params){
+                                var newParamsName = "";
+                                var paramsNameNumber = params.length;
+                                var provideNumber = 4;
+                                var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                                if (paramsNameNumber > provideNumber) {
+                                    for (var p = 0; p < rowNumber; p++) {
+                                        var tempStr = "";
+                                        var start = p * provideNumber;
+                                        var end = start + provideNumber;
+                                        if (p == rowNumber - 1) {
+                                            tempStr = params.substring(start, paramsNameNumber);
+                                        } else {
+                                            tempStr = params.substring(start, end) + "\n";
+                                        }
+                                        newParamsName += tempStr;
+                                    }
+
+                                } else {
+                                    newParamsName = params;
+                                }
+                                return newParamsName
+                            }
+
+                        }
                     },
                     yAxis: {
                         type : 'value'

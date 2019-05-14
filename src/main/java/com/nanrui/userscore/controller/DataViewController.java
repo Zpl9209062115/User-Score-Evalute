@@ -3,6 +3,7 @@ package com.nanrui.userscore.controller;
 import com.csvreader.CsvReader;
 import com.nanrui.userscore.entities.DashboardPage_DataPackageBean;
 import com.nanrui.userscore.entities.LoanUser_GiveMark;
+import com.nanrui.userscore.entities.RuleBean;
 import com.nanrui.userscore.service.DataViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,6 +65,12 @@ public class DataViewController {
             e.printStackTrace();
             return result;
         }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/dataView/modelOptimize")
+    public Boolean ruleModelView(@RequestBody Map<String,Object> params){
+        return true;
     }
 
 }

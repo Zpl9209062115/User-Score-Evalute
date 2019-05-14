@@ -22,6 +22,11 @@ server:
   context-path: /userscore
   tomcat:
     uri-encoding: UTF-8
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count
 
-
+# Pagehelper #分页插件
 
