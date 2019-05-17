@@ -70,6 +70,7 @@ public class DataViewController {
     @ResponseBody
     @PostMapping(value = "/dataView/modelOptimize")
     public Boolean ruleModelView(@RequestBody Map<String,Object> params){
+
         return true;
     }
 
