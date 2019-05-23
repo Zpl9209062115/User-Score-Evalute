@@ -37,11 +37,19 @@
 
 
 
-    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
-    <link th:href="@{/asserts/css/bootstrap.css}" rel="stylesheet"/>
+
+    <!--<link th:href="@{/asserts/css/bootstrap.css}" rel="stylesheet"/>-->
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet"/>
+
     <link th:href="@{/asserts/css/bootstrap-table.css}" rel="stylesheet" />
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
     <script  th:src="@{/asserts/js/jquery-2.1.1.min.js}"></script>
-    <script th:src="@{/asserts/js/bootstrap.js}"></script>
+
+    <script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/asserts/js/popper.min.js}"></script>
+
+    <!--<script th:src="@{/asserts/js/bootstrap.js}"></script>-->
+    <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+
     <script type="text/javascript" th:src="@{/asserts/js/bootstrap-table.js}" ></script>
     <script type="text/javascript" th:src="@{/asserts/js/locales/bootstrap-table-zh-CN.min.js}"></script>
 </head>
